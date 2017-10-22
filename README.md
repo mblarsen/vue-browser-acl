@@ -31,7 +31,7 @@ VueAcl(() => user, (acl) => {
 ```
 
 The _1st parameter_ is a function that returns the user. It can also be just a
-user object.  The _2nd parameter_ is a callback that lets you can set up rules.
+user object.  The _2nd parameter_ is a callback that let's you set up rules.
 Alternatively you can pass a [preconfigured acl](https://github.com/mblarsen/browser-acl#setup) from
 the `browser-acl` package.
 
