@@ -21,16 +21,16 @@ import Acl from 'browser-acl'
  * @param {Object} options={}
  * @param {Boolean} [options.directive='can'] Name of the directive, and helper function
  * @param {Boolean} [options.helper=true] Adds helper function
- * @param {Boolean} [options.assumeCase=true] When true lower case subjects will be
- *                                            looked up on the vue context
+ * @param {Boolean} [options.caseMode=true] When true lower case subjects will be
+ *                                          looked up on the vue context
  * @param {Object} aclOptions={} Options passed to the Acl constructor
  */
 export default function (userAccessor, setupCallback, options = {}, aclOptions = {}) {
   /* ensure userAccessor is function */
   userAccessor = typeof userAccessor === 'function' ? userAccessor : () => userAccessor
 
-  /* default assumeCase */
-  const assumeCase = Boolean(typeof options.assumeCase === 'undefined' || options.assumeCase)
+  /* default caseMode to true */
+  const caseMode = Boolean(typeof options.caseMode === 'undefined' || options.caseMode)
 
   /* setup acl */
   let acl = setupCallback
@@ -48,7 +48,7 @@ export default function (userAccessor, setupCallback, options = {}, aclOptions =
       [verb, subject, ...params] = binding.value
     } else if (typeof binding.value === 'string') {
       [verb, subject] = binding.value.split(' ')
-      if (typeof subject === 'string' && assumeCase && subject[0].match(/[a-z]/)) {
+      if (typeof subject === 'string' && caseMode && subject[0].match(/[a-z]/)) {
         subject = vnode.context[subject]
       }
       params = []

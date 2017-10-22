@@ -99,7 +99,7 @@ If you don't want to install the helper function pass `helper: false` in the opt
 
 ## Options
 
-### assumeCase
+### caseMode
 `default: true`
 
 Assume case means that an upper case subject is the name of a class or a constructor function and that a lower case subject
@@ -107,7 +107,7 @@ is the component member name of an instance of that class.
 
 E.g. if subject is `post` the directive will try to look up the data member `post` on the component.
 
-If `assumeCase` is set to false this behaviour is disabled and `post` will be treated as a subject name.
+If `caseMode` is set to false this behaviour is disabled and `post` will be treated as a subject name.
 
 ### directive
 `default: can`
