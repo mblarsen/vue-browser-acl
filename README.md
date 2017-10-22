@@ -73,9 +73,15 @@ on how to use them.
 You can also use the helper function `$can` that works much in the same way:
 
 ```javascript
-if (this.$can('edit', post) {
+if (this.$can('edit', post)) {
     axios.put(`/api/posts/${post.id}`, post)
 }
+```
+
+or
+
+```vue
+<settings-table :editable="$can('update', 'Setting')" :settings="settings" />
 ```
 
 ## Options
