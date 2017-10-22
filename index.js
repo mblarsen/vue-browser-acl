@@ -15,8 +15,9 @@ import Acl from 'browser-acl'
  * ```
  *
  * @access public
- * @param {Function} userAccessor
- * @param {Function|Object} setupCallback A configured Acl instance of a callback
+ * @param {Function|Object} userAccessor A user instance or a function that returns the user
+ * @param {Function|Object} setupCallback A configured Acl instance or a callback callback that
+ *                                        adds rules and policies.
  * @param {Object} options={}
  * @param {Boolean} [options.directive='can'] Name of the directive, and helper function
  * @param {Boolean} [options.helper=true] Adds helper function

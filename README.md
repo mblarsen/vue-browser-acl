@@ -12,7 +12,6 @@
 * Can be used to **hide** `v-can` or to **disable** `v-can.disable`
 * Can be used on collections `v-can.some` or `v-can.every`
 
-
 ## Install
 
 ```
@@ -31,7 +30,12 @@ VueAcl(() => user, (acl) => {
 })
 ```
 
-Make sure to see [browser-acl](https://github.com/mblarsen/browser-acl) for how to define rules and policies.
+The _1st parameter_ is a function that returns the user. It can also be just a
+user object.  The _2nd parameter_ is a callback that lets you can set up rules.
+Alternatively you can pass a [preconfigured acl](https://github.com/mblarsen/browser-acl#setup) from
+the `browser-acl` package.
+
+See [browser-acl](https://github.com/mblarsen/browser-acl) for how to define rules and policies.
 
 ## Usage
 
@@ -79,16 +83,16 @@ on how to use them.
 
 You can also use the helper function `$can` that works much in the same way:
 
-```javascript
-if (this.$can('edit', post)) {
-    axios.put(`/api/posts/${post.id}`, post)
-}
+```vue
+<settings-table :editable="$can('update', 'Setting')" :settings="settings" />
 ```
 
 or
 
-```vue
-<settings-table :editable="$can('update', 'Setting')" :settings="settings" />
+```javascript
+if (this.$can('edit', post)) {
+    axios.put(`/api/posts/${post.id}`, post)
+}
 ```
 
 If you don't want to install the helper function pass `helper: false` in the options.
