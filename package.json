@@ -1,0 +1,23 @@
+{
+  "name": "vue-browser-acl",
+  "description": "Easy ACL in Vue build on top of the browser-acl package.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/vue-browser-acl.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "poi build",
+    "version": "npm run build && git add -A dist",
+    "postversion": "git push && git push --tags"
+  },
+  "dependencies": {
+    "browser-acl": "^0.3.5"
+  },
+  "devDependencies": {
+    "poi": "^9.4.1",
+    "vue": "2.4.4",
+    "vue-template-compiler": "2.4.4"
+  }
+}
