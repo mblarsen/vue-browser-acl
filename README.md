@@ -60,7 +60,7 @@ that `post` will be checked on build time that exists on the component.
 
 In this example the `disable` argument is used. The button will be disabled rather than hidden.
 
-```
+```vue
 <button v-can.some="'mark notifications'">Mark read</button>
 <button v-can.every="'archive posts'">Archive all</button>
 ```
@@ -80,7 +80,7 @@ if (this.$can('edit', post) {
 
 ## Options
 
-### Option: assumeCase
+### assumeCase
 `default: true`
 
 Assume case means that an upper case subject is the name of a class or a constructor function and that a lower case subject
@@ -90,7 +90,7 @@ E.g. if subject is `post` the directive will try to look up the data member `pos
 
 If `assumeCase` is set to false this behaviour is disabled and `post` will be treated as a subject name.
 
-### Option directive
+### directive
 `default: can`
 
 The name of the directive. E.g. `can` produces a directive called `v-can` and a helper function called `$can`.
