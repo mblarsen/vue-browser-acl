@@ -19,6 +19,7 @@ import Acl from 'browser-acl'
  * @param {Function|Object} setupCallback A configured Acl instance of a callback
  * @param {Object} options={}
  * @param {Boolean} [options.directive='can'] Name of the directive, and helper function
+ * @param {Boolean} [options.helper=true] Adds helper function
  * @param {Boolean} [options.assumeCase=true] When true lower case subjects will be
  *                                            looked up on the vue context
  * @param {Object} aclOptions={} Options passed to the Acl constructor
@@ -68,20 +69,22 @@ export default function (userAccessor, setupCallback, options = {}, aclOptions =
     }
   })
 
-  const helper = `$${options.directive || 'can'}`
-  Vue.use({
-    install(Vue) {
-      Vue.prototype[helper] = function () {
-        return acl.can(userAccessor(), ...arguments)
+  if (options.helper) {
+    const helper = `$${options.directive || 'can'}`
+    Vue.use({
+      install(Vue) {
+        Vue.prototype[helper] = function () {
+          return acl.can(userAccessor(), ...arguments)
+        }
+        Vue.prototype[helper].every = function () {
+          return acl.every(userAccessor(), ...arguments)
+        }
+        Vue.prototype[helper].some = function () {
+          return acl.some(userAccessor(), ...arguments)
+        }
       }
-      Vue.prototype[helper].every = function () {
-        return acl.every(userAccessor(), ...arguments)
-      }
-      Vue.prototype[helper].some = function () {
-        return acl.some(userAccessor(), ...arguments)
-      }
-    }
-  })
+    })
+  }
 }
 
 /**

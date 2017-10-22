@@ -84,6 +84,8 @@ or
 <settings-table :editable="$can('update', 'Setting')" :settings="settings" />
 ```
 
+If you don't want to install the helper function pass `helper: false` in the options.
+
 ## Options
 
 ### assumeCase
@@ -102,3 +104,8 @@ If `assumeCase` is set to false this behaviour is disabled and `post` will be tr
 The name of the directive. E.g. `can` produces a directive called `v-can` and a helper function called `$can`.
 
 You'll most likely only use this if you want to replace this module with an existing one that uses a different name.
+
+### helper
+`default: true`
+
+Adds `$can` helper function to the Vue prototype when true.
