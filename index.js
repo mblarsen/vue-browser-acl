@@ -15,7 +15,7 @@ import Acl from 'browser-acl'
  * ```
  *
  * @access public
- * @param {Function|Object} userAccessor A user instance or a function that returns the user
+ * @param {Function|Object} user A user instance or a function that returns the user
  * @param {Function|Object} setupCallback A configured Acl instance or a callback callback that
  *                                        adds rules and policies.
  * @param {Object} options={}
@@ -25,9 +25,9 @@ import Acl from 'browser-acl'
  *                                          looked up on the vue context
  * @param {Object} aclOptions={} Options passed to the Acl constructor
  */
-export default function (userAccessor, setupCallback, options = {}, aclOptions = {}) {
+export default function (user, setupCallback, options = {}, aclOptions = {}) {
   /* ensure userAccessor is function */
-  userAccessor = typeof userAccessor === 'function' ? userAccessor : () => userAccessor
+  const userAccessor = typeof user === 'function' ? user : () => user
 
   /* default caseMode to true */
   const caseMode = Boolean(typeof options.caseMode === 'undefined' || options.caseMode)
