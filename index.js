@@ -29,8 +29,12 @@ export default function (user, setupCallback, options = {}, aclOptions = {}) {
   /* ensure userAccessor is function */
   const userAccessor = typeof user === 'function' ? user : () => user
 
-  /* default caseMode to true */
-  const caseMode = Boolean(typeof options.caseMode === 'undefined' || options.caseMode)
+  /* defaults */
+  options = Object.assign({
+    caseMode: true,
+    helper: true,
+    directive: 'can',
+  }, options)
 
   /* setup acl */
   let acl = setupCallback
@@ -40,7 +44,7 @@ export default function (user, setupCallback, options = {}, aclOptions = {}) {
   }
 
   /* create directive */
-  Vue.directive(options.directive || 'can', function (el, binding, vnode) {
+  Vue.directive(options.directive, function (el, binding, vnode) {
     const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
 
     let verb, subject, params
@@ -48,7 +52,7 @@ export default function (user, setupCallback, options = {}, aclOptions = {}) {
       [verb, subject, ...params] = binding.value
     } else if (typeof binding.value === 'string') {
       [verb, subject] = binding.value.split(' ')
-      if (typeof subject === 'string' && caseMode && subject[0].match(/[a-z]/)) {
+      if (typeof subject === 'string' && options.caseMode && subject[0].match(/[a-z]/)) {
         subject = vnode.context[subject]
       }
       params = []
@@ -58,7 +62,7 @@ export default function (user, setupCallback, options = {}, aclOptions = {}) {
       throw new Error('Missing verb or subject')
     }
 
-    const aclMethod = binding.modifiers.some && 'some' || binding.modifiers.every && 'every' || 'can'
+    const aclMethod = (binding.modifiers.some && 'some') || (binding.modifiers.every && 'every') || 'can'
     const ok = acl[aclMethod](userAccessor(), verb, subject, ...params)
 
     if (!ok) {
@@ -71,7 +75,7 @@ export default function (user, setupCallback, options = {}, aclOptions = {}) {
   })
 
   if (options.helper) {
-    const helper = `$${options.directive || 'can'}`
+    const helper = `$${options.directive}`
     Vue.use({
       install(Vue) {
         Vue.prototype[helper] = function () {
