@@ -67,3 +67,32 @@ In this example the `disable` argument is used. The button will be disabled rath
 
 The `some` and `every` arguments takes multiple subjects. See [browser-acl](https://github.com/mblarsen/browser-acl) for more info
 on how to use them.
+
+### Helper
+
+You can also use the helper function `$can` that works much in the same way:
+
+```javascript
+if (this.$can('edit', post) {
+    axios.put(`/api/posts/${post.id}`, post)
+}
+```
+
+## Options
+
+### Option: assumeCase
+`default: true`
+
+Assume case means that an upper case subject is the name of a class or a constructor function and that a lower case subject
+is the component member name of an instance of that class.
+
+E.g. if subject is `post` the directive will try to look up the data member `post` on the component.
+
+If `assumeCase` is set to false this behaviour is disabled and `post` will be treated as a subject name.
+
+### Option directive
+`default: can`
+
+The name of the directive. E.g. `can` produces a directive called `v-can` and a helper function called `$can`.
+
+You'll most likely only use this if you want to replace this module with an existing one that uses a different name.
