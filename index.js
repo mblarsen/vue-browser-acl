@@ -57,7 +57,7 @@ export default {
 
         if (typeof meta.can === 'function') {
           const next_ = (verb, subject, ...otherArgs) => {
-            if ((subject && acl.can(userAccessor(), ...otherArgs)) || (!subject && !options.strictRoutes)) {
+            if ((subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) || (!subject && !options.strictRoutes)) {
               return next()
             }
             next(fail)
@@ -65,7 +65,7 @@ export default {
           return meta.can(to, from, next_)
         }
 
-        const [verb = null, subject = null] = (to.meta.can || '').split(' ')
+        const [verb = null, subject = null] = (meta.can || '').split(' ')
         if ((subject && acl.can(userAccessor(), verb, subject)) || (!subject && !options.strictRoutes)) {
           return next()
         }
