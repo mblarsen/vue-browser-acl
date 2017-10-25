@@ -11,6 +11,7 @@
 * Adds `$can` helper function to the Vue prototype (optional)
 * Can be used to **hide** `v-can` or to **disable** `v-can.disable`
 * Can be used on collections `v-can.some` or `v-can.every`
+* Can be used with vue-router to guard routes
 
 ## Install
 
@@ -21,25 +22,29 @@ yarn add vue-browser-acl
 ## Setup
 
 ```javascript
-import VueAcl from 'vue-browser-acl'
+import Vue from 'vue'
+import Acl from 'vue-browser-acl'
 
-VueAcl(() => user, (acl) => {
+Vue.use(Acl, user, (acl) => {
   acl.rule(view, Post)
   acl.rule([edit, delete], Post, (user, post) => post.userId === user.id)
   acl.rule('moderate', Post, (user) => user.isModerator())
 })
 ```
 
-The _1st parameter_ is a function that returns the user. It can also be just a
-user object.  The _2nd parameter_ is a callback that let's you set up rules.
-Alternatively you can pass a [preconfigured acl](https://github.com/mblarsen/browser-acl#setup) from
+You can pass in an actual user or a function that returns the users.
+
+The second param is a callback that let's you define the rules. Alternatively you can pass
+a [preconfigured acl](https://github.com/mblarsen/browser-acl#setup) from
 the `browser-acl` package.
 
-See [browser-acl](https://github.com/mblarsen/browser-acl) for how to define rules and policies.
+See [browser-acl setup](https://github.com/mblarsen/browser-acl) for how to define rules and policies.
+
+As an optional third parameter you can pass an [options](#options) object.
 
 ## Usage
 
-You can use the module as directive and as a helper function.
+You can use the module as directive, with vue-router, and as a helper function.
 
 ### Directive
 
@@ -97,7 +102,73 @@ if (this.$can('edit', post)) {
 
 If you don't want to install the helper function pass `helper: false` in the options.
 
+### vue-router
+
+There are two ways to hook up the vue-router. Either during setup of the Acl or later calling the router
+init funtion.
+
+##### Option 1: setup
+
+```javascript
+Vue.use(Acl, user, (acl) => {
+    ..
+}, {router});
+```
+
+##### Option 2: init function
+
+```javascript
+acl.router(router)
+```
+
+#### Route permissions
+
+You configure routes by adding `can` meta property to the route. E.g. if a router
+requires create permissions for "Post":
+
+```javascript
+{
+  name: 'new-post',
+  path: 'posts/create',
+  component: PostEditor,
+  meta: {
+    can: 'create Post',
+    fail: '/posts'
+  }
+}
+```
+
+Limitation: Unlike with the directive and the helper you will not have access to class instances. E.g you
+cannot use a `can: 'delete post'` as this assumes you have a Post instance already.
+
+Optionally you have the option to specify a callback:
+
+```javascript
+{
+  path: 'posts/: postId',
+  component: PostEditor,
+  meta: {
+    can: function (to, from, next) {
+      axios.get(/* fetch post async */)
+        .then({post} => next('delete', post))
+    }
+    fail: '/posts'
+  }
+}
+```
+
+Normally it would be better to prevent this route from being visited in the first place. Also the
+backend could perform a redirect. That said you have the option.
+
+Note that `next` is a wrapper of the function that vue-router provides by the same name. It takes the
+same arguments as the `can` function.
+
 ## Options
+
+### router
+`default: undefined`
+
+Pass in a router instance if you want to make use of the ACL functionality in routers.
 
 ### caseMode
 `default: true`

@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import Acl from 'browser-acl'
 
 /**
@@ -23,72 +22,106 @@ import Acl from 'browser-acl'
  * @param {Boolean} [options.helper=true] Adds helper function
  * @param {Boolean} [options.caseMode=true] When true lower case subjects will be
  *                                          looked up on the vue context
- * @param {Object} aclOptions={} Options passed to the Acl constructor
+ * @param {Boolean} [options.strictRoutes=false] Will fail if route permissions are absent
+ * @param {Object} [options.acl={}] Options passed to the Acl constructor
+ * @param {?Object} options.router Vue router
  */
-export default function (user, setupCallback, options = {}, aclOptions = {}) {
-  /* ensure userAccessor is function */
-  const userAccessor = typeof user === 'function' ? user : () => user
+export default {
+  install: function (Vue, user, setupCallback, options = {}) {
 
-  /* defaults */
-  options = Object.assign({
-    caseMode: true,
-    helper: true,
-    directive: 'can',
-  }, options)
+    /* ensure userAccessor is function */
+    const userAccessor = typeof user === 'function' ? user : () => user
 
-  /* setup acl */
-  let acl = setupCallback
-  if (!(setupCallback instanceof Acl)) {
-    acl = new Acl(aclOptions)
-    setupCallback(acl)
-  }
+    /* defaults */
+    options = Object.assign({
+      acl: {},
+      caseMode: true,
+      helper: true,
+      directive: 'can',
+      strictRoutes: false,
+    }, options)
 
-  /* create directive */
-  Vue.directive(options.directive, function (el, binding, vnode) {
-    const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
-
-    let verb, subject, params
-    if (Array.isArray(binding.value)) {
-      [verb, subject, ...params] = binding.value
-    } else if (typeof binding.value === 'string') {
-      [verb, subject] = binding.value.split(' ')
-      if (typeof subject === 'string' && options.caseMode && subject[0].match(/[a-z]/)) {
-        subject = vnode.context[subject]
-      }
-      params = []
+    /* setup acl */
+    let acl = setupCallback
+    if (!(setupCallback instanceof Acl)) {
+      acl = new Acl(options.acl)
+      setupCallback(acl)
     }
 
-    if (!verb || !subject) {
-      throw new Error('Missing verb or subject')
-    }
+    /* router init function */
+    acl.router = function (router) {
+      options.router = router
+      router.beforeEach((to, from, next) => {
+        const fail = to.meta.fail || '/'
+        const meta = to.meta || {}
 
-    const aclMethod = (binding.modifiers.some && 'some') || (binding.modifiers.every && 'every') || 'can'
-    const ok = acl[aclMethod](userAccessor(), verb, subject, ...params)
-
-    if (!ok) {
-      if (behaviour === 'hide') {
-        commentNode(el, vnode)
-      } else if (behaviour === 'disable') {
-        el.disabled = true
-      }
-    }
-  })
-
-  if (options.helper) {
-    const helper = `$${options.directive}`
-    Vue.use({
-      install(Vue) {
-        Vue.prototype[helper] = function () {
-          return acl.can(userAccessor(), ...arguments)
+        if (typeof meta.can === 'function') {
+          const next_ = (verb, subject, ...otherArgs) => {
+            if ((subject && acl.can(userAccessor(), ...otherArgs)) || (!subject && !options.strictRoutes)) {
+              return next()
+            }
+            next(fail)
+          }
+          return meta.can(to, from, next_)
         }
-        Vue.prototype[helper].every = function () {
-          return acl.every(userAccessor(), ...arguments)
+
+        const [verb = null, subject = null] = (to.meta.can || '').split(' ')
+        if ((subject && acl.can(userAccessor(), verb, subject)) || (!subject && !options.strictRoutes)) {
+          return next()
         }
-        Vue.prototype[helper].some = function () {
-          return acl.some(userAccessor(), ...arguments)
+        next(fail)
+      })
+    }
+
+    /* init router */
+    if (options.router) {
+      acl.router(options.router)
+    }
+
+    /* create directive */
+    Vue.directive(options.directive, function (el, binding, vnode) {
+      const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
+
+      let verb, subject, params
+      if (Array.isArray(binding.value)) {
+        [verb, subject, ...params] = binding.value
+      } else if (typeof binding.value === 'string') {
+        [verb, subject] = binding.value.split(' ')
+        if (typeof subject === 'string' && options.caseMode && subject[0].match(/[a-z]/)) {
+          subject = vnode.context[subject]
+        }
+        params = []
+      }
+
+      if (!verb || !subject) {
+        throw new Error('Missing verb or subject')
+      }
+
+      const aclMethod = (binding.modifiers.some && 'some') || (binding.modifiers.every && 'every') || 'can'
+      const ok = acl[aclMethod](userAccessor(), verb, subject, ...params)
+
+      if (!ok) {
+        if (behaviour === 'hide') {
+          commentNode(el, vnode)
+        } else if (behaviour === 'disable') {
+          el.disabled = true
         }
       }
     })
+
+    /* define helpers */
+    if (options.helper) {
+      const helper = `$${options.directive}`
+      Vue.prototype[helper] = function () {
+        return acl.can(userAccessor(), ...arguments)
+      }
+      Vue.prototype[helper].every = function () {
+        return acl.every(userAccessor(), ...arguments)
+      }
+      Vue.prototype[helper].some = function () {
+        return acl.some(userAccessor(), ...arguments)
+      }
+    }
   }
 }
 
