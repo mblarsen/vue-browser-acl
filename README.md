@@ -11,7 +11,7 @@
 * Adds `$can` helper function to the Vue prototype (optional)
 * Can be used to **hide** `v-can` or to **disable** `v-can.disable`
 * Can be used on collections `v-can.some` or `v-can.every`
-* Can be used with vue-router to guard routes
+* Can be used with **vue-router** to guard routes
 
 ## Install
 
