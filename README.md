@@ -166,7 +166,7 @@ same arguments as the `can` function.
 ## Options
 
 ### acl
-`defualt: {}`
+`default: {}`
 
 Options object passed to the Acl contructor.
 
