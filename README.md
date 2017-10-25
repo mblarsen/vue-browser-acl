@@ -165,10 +165,10 @@ same arguments as the `can` function.
 
 ## Options
 
-### router
-`default: undefined`
+### acl
+`defualt: {}`
 
-Pass in a router instance if you want to make use of the ACL functionality in routers.
+Options object passed to the Acl contructor.
 
 ### caseMode
 `default: true`
@@ -191,3 +191,8 @@ You'll most likely only use this if you want to replace this module with an exis
 `default: true`
 
 Adds `$can` helper function to the Vue prototype when true.
+
+### router
+`default: undefined`
+
+Pass in a router instance if you want to make use of the ACL functionality in routers.
