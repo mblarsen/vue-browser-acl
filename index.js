@@ -15,16 +15,14 @@ import Acl from 'browser-acl'
  *
  * @access public
  * @param {Function|Object} user A user instance or a function that returns the user
- * @param {Function|Object} setupCallback A configured Acl instance or a callback callback that
- *                                        adds rules and policies.
- * @param {Object} options={}
+ * @param {Function|Object} setupCallback A configured Acl instance or a callback callback that adds rules and policies.
+ * @param {Object}   options={}
+ * @param {Object}  [options.acl={}] Options passed to the Acl constructor
+ * @param {Boolean} [options.caseMode=true] When true lower case subjects will be looked up on the vue context
  * @param {Boolean} [options.directive='can'] Name of the directive, and helper function
  * @param {Boolean} [options.helper=true] Adds helper function
- * @param {Boolean} [options.caseMode=true] When true lower case subjects will be
- *                                          looked up on the vue context
- * @param {Boolean} [options.strictRoutes=false] Will fail if route permissions are absent
- * @param {Object} [options.acl={}] Options passed to the Acl constructor
- * @param {?Object} options.router Vue router
+ * @param {Boolean} [options.strict=false] Will fail if route permissions are absent.
+ * @param {?Object}  options.router Vue router
  */
 export default {
   install: function (Vue, user, setupCallback, options = {}) {
@@ -34,11 +32,11 @@ export default {
 
     /* defaults */
     options = Object.assign({
-      acl: {},
+      acl: {strict: Boolean(options.strict)},
       caseMode: true,
       helper: true,
       directive: 'can',
-      strictRoutes: false,
+      strict: false,
     }, options)
 
     /* setup acl */
@@ -57,7 +55,7 @@ export default {
 
         if (typeof meta.can === 'function') {
           const next_ = (verb, subject, ...otherArgs) => {
-            if ((subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) || (!subject && !options.strictRoutes)) {
+            if ((subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) || (!subject && !options.strict)) {
               return next()
             }
             next(fail)
@@ -66,7 +64,7 @@ export default {
         }
 
         const [verb = null, subject = null] = (meta.can || '').split(' ')
-        if ((subject && acl.can(userAccessor(), verb, subject)) || (!subject && !options.strictRoutes)) {
+        if ((subject && acl.can(userAccessor(), verb, subject)) || (!subject && !options.strict)) {
           return next()
         }
         next(fail)

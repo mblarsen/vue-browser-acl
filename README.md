@@ -196,3 +196,20 @@ Adds `$can` helper function to the Vue prototype when true.
 `default: undefined`
 
 Pass in a router instance if you want to make use of the ACL functionality in routers.
+
+### strict
+`default: false`
+
+When set to true a route without `meta.can` will automatically fail. In addition the setting
+will cascade to the Acl settings, making these equivalent:
+
+```javascript
+Vue.use(Acl, user, acl => {...}, {strict: true}}
+Vue.use(Acl, user, acl => {...}, {strict: true, acl: {strict: true}}
+```
+
+You can override this behaviour like this:
+
+```javascript
+Vue.use(Acl, user, acl => {...}, {strict: true, acl: {strict: false}}
+```
