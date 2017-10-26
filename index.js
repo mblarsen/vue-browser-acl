@@ -4,9 +4,10 @@ import Acl from 'browser-acl'
  * VueAcl constructor function
  *
  * ```javascript
- * import VueAcl from 'vue-browser-acl'
+ * import Vue from 'vue'
+ * import Acl from 'vue-browser-acl'
  *
- * VueAcl(() => user, (acl) => {
+ * Vue.use(Acl, user, (acl) => {
  *   acl.rule(view, Post)
  *   acl.rule([edit, delete], Post, (user, post) => post.userId === user.id)
  *   acl.rule('moderate', Post, (user) => user.isModerator())
