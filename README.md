@@ -13,6 +13,10 @@
 * Can be used on collections `v-can.some` or `v-can.every`
 * Can be used with **vue-router** to guard routes
 
+<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/okYdxs3cWxjapKfPcTg9nLwG/mblarsen/vue-browser-acl'>
+  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/okYdxs3cWxjapKfPcTg9nLwG/mblarsen/vue-browser-acl.svg' />
+</a>
+
 ## Install
 
 ```
