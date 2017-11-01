@@ -81,14 +81,23 @@ export default {
     Vue.directive(options.directive, function (el, binding, vnode) {
       const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
 
-      let verb, subject, params
+      let verb, verbArg, subject, params
+      verbArg = binding.arg
       if (Array.isArray(binding.value)) {
-        [verb, subject, ...params] = binding.value
+        [verb, subject, ...params] = verbArg === undefined
+          ? binding.value
+          : [verbArg, ...binding.value]
       } else if (typeof binding.value === 'string') {
-        [verb, subject] = binding.value.split(' ')
+        [verb, subject] = verbArg === undefined
+          ? binding.value.split(' ')
+          : [verbArg, binding.value]
         if (typeof subject === 'string' && options.caseMode && subject[0].match(/[a-z]/)) {
           subject = vnode.context[subject]
         }
+        params = []
+      } else if (verbArg && typeof binding.value === 'object') {
+        verb = verbArg
+        subject = binding.value
         params = []
       }
 

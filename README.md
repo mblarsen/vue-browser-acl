@@ -7,7 +7,7 @@
 > Easy ACL in Vue build on top of the [browser-acl](https://github.com/mblarsen/browser-acl) package.
 
 * Easily manage permissions with [browser-acl](https://github.com/mblarsen/browser-acl) using rules and/or policies
-* Adds `v-can` directive with simple natural language syntax: `v-can="'create Post'"` (the class) and `v-can="'edit post'"` an instance on the component
+* Adds `v-can` directive with simple natural language syntax: `v-can:create="'Post'"` (the class) and `v-can:edit="post"` an instance on the component
 * Adds `$can` helper function to the Vue prototype (optional)
 * Can be used to **hide** `v-can` or to **disable** `v-can.disable`
 * Can be used on collections `v-can.some` or `v-can.every`
@@ -22,6 +22,27 @@
 ```
 yarn add vue-browser-acl
 ```
+
+## Examples
+
+```vue
+<!-- Like v-if removes button if user does not have permission to transfer repo -->
+<button v-can:transfer="repo">Transefer</button>
+<button v-can:transfer.hide="repo">Transefer</button>
+<!-- Disables button if user does not have permission to transfer repo -->
+<button v-can:transfer.disable="repo">Transefer</button>
+<!-- String syntax, repo instance in context Repo is the class -->
+<button v-can="'transfer repo'">Transefer</button>
+<button v-can="'create Repo'">Transefer</button>
+<!-- Array syntax, takes additional arguments -->
+<button v-can="['transfer', repo, otherArgs]">Transefer</button>
+<!-- Only show if at least one player can be edited -->
+<table v-can.some="['edit', players]">
+<!-- Only show if at least one player can be edited -->
+<button v-can:sell.every="players">Sell team</button>
+```
+
+See below for router and helper examples.
 
 ## Setup
 
