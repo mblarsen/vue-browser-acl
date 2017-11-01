@@ -7,42 +7,37 @@
 > Easy ACL in Vue build on top of the [browser-acl](https://github.com/mblarsen/browser-acl) package.
 
 * Easily manage permissions with [browser-acl](https://github.com/mblarsen/browser-acl) using rules and/or policies
-* Adds `v-can` directive with simple natural language syntax: `v-can:create="'Post'"` (the class) and `v-can:edit="post"` an instance on the component
+* Adds `v-can` directive with simple syntax: `v-can:create="'Post'"` (the class) and `v-can:edit="post"` an instance on the component
 * Adds `$can` helper function to the Vue prototype (optional)
 * Can be used to **hide** `v-can` or to **disable** `v-can.disable`
 * Can be used on collections `v-can.some` or `v-can.every`
 * Can be used with **vue-router** to guard routes
 
-<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/okYdxs3cWxjapKfPcTg9nLwG/mblarsen/vue-browser-acl'>
-  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/okYdxs3cWxjapKfPcTg9nLwG/mblarsen/vue-browser-acl.svg' />
-</a>
-
-## Install
-
-```
-yarn add vue-browser-acl
-```
-
 ## Examples
 
 ```vue
 <!-- Like v-if removes button if user does not have permission to transfer repo -->
-<button v-can:transfer="repo">Transefer</button>
-<button v-can:transfer.hide="repo">Transefer</button>
-<!-- Disables button if user does not have permission to transfer repo -->
-<button v-can:transfer.disable="repo">Transefer</button>
-<!-- String syntax, repo instance in context Repo is the class -->
-<button v-can="'transfer repo'">Transefer</button>
-<button v-can="'create Repo'">Transefer</button>
-<!-- Array syntax, takes additional arguments -->
-<button v-can="['transfer', repo, otherArgs]">Transefer</button>
+<button v-can:transfer="repo">Transfer</button>
+<!-- disables button if user does not have permission to transfer repo -->
+<button v-can:transfer.disable="repo">Transfer</button>
+<!-- string syntax, repo instance in context, Repo is the class -->
+<button v-can="'transfer repo'">Transfer</button>
+<button v-can="'create Repo'">Transfer</button>
+<!-- Send additional arguments (array flavor)-->
+<button v-can="['transfer', repo, otherArgs]">Transfer</button>
 <!-- Only show if at least one player can be edited -->
 <table v-can.some="['edit', players]">
 <!-- Only show if at least one player can be edited -->
 <button v-can:sell.every="players">Sell team</button>
 ```
 
-See below for router and helper examples.
+Router and helper examples are available below.
+
+## Install
+
+```javascript
+yarn add vue-browser-acl
+```
 
 ## Setup
 
@@ -73,41 +68,134 @@ You can use the module as directive, with vue-router, and as a helper function.
 
 ### Directive
 
-The simplest way to use the direct is with the string syntax.
+The `v-can` directive can be used in three different flavors and you can apply one or more modifiers
+that alters the behavior of the directive.
+
+#### Flavors
+
+There are three different flavors, that to some degree can be mixed: array, string, and argument. For
+most cases the _argument flavor_ would be the preferred syntax.
+
+##### Array flavor
+
+Verb, subject and optional parameters are passed as an array as the value for the directive.
 
 ```vue
-<button v-can="'create Post'">Delete</button>
+<button v-can="['create', 'Post']">New</button>
+<button v-can="['edit', post]">Edit</button>
+<button v-can="['delete', comment, post]">Delete</button>
 ```
 
-The string `create Post` is interpreted as the verb 'create' on the subject with name 'Post' (a class name).
+All arguments from the third and onwards will be passed to the ACL for evaluation.
+
+Pros:
+
+- Let's you pass additional arguments
+- The vue compiler throws errors if you use something that doesn't exist on the component
+
+Cons:
+
+- Doesn't read so easily when skimming the markup
+
+##### String flavor
+
+Verb and subject is combined in a string like `create Post` or `edit post` which makes
+up the value of the directive.
+
+```vue
+<button v-can="'create Post'">Create</button>
+<button v-can="'edit post'">Edit</button>
+```
+
+The string `create Post` is interpreted as the verb 'create' on the subject with name
+'Post' (a class name).  The string `edit post` is interpreted as the verb 'edit' on
+the subject that is a property on the component.
+
+Pros:
+
+- Easy to read
+
+Cons:
+
+- Cannot take additional arguments
+- Since the value is a string you lose the vue-compiler errors if you refer to something
+  that doesn't exist.
+
+##### Argument flavor
+
+In this flavor the verb is passed as an argument to the directive and for the value can
+use either string or array flavor with the verb removed. Additionally the value can be a
+plain subject object as well.
+
+```vue
+<button v-can:create="'Post'">New</button>
+<button v-can:edit="'post'">Edit</button>
+<button v-can:edit="post">Edit</button>
+<button v-can:delete="[comment, post]">Delete</button>
+```
+
+Pros:
+
+- Easy to read for simple cases
+- Flexible value syntax
+- The vue compiler throws errors if you use something that doesn't exist on the component
+
+Cons:
+
+- Can be slightly harder to comprehend as you make use of modifiers.
+
+#### Modifiers
+
+There are four modifiers. Two that affects the element (hide, disable) and two that let's
+you evaluate multiple subjects at once (some, every).
+
+```vue
+<button v-can.disable="'delete post'">Delete</button>
+<button v-can:delete.disable="post">Delete</button>
+<button v-can:delete.disable.some="posts">Delete</button>
+```
+
+Modifiers are applied after the directive (first line) or argument (second line) and
+separated by a dot (third line) if several modifiers are used.
+
+##### Hide modifier
+
+The hide modifier is also the default behavior so there is no need to apply it unless you
+want to explicitly state the behavior. It works like `v-if` by removing the component from
+the DOM.
 
 ```vue
 <button v-can="'delete post'">Delete</button>
+<button v-can.hide="'delete post'">Delete</button>
 ```
 
-The string `create post` is interpreted as the verb 'create' on the subject that is a property on the component
-in which the directive is used.
+The above two lines has the same effect.
 
-```vue
-<button v-can="['delete', post]">Delete</button>
-```
+##### Disable modifier
 
-An alternative syntax is to pass in an array with the verb first and the subject second. This has the advantage
-that `post` will be checked on build time that exists on the component.
+The disable modifier applies the `disabled` argument to the tag, e.g. to disable a button that
+you are not allowed to use.
 
 ```vue
 <button v-can.disable="'delete post'">Delete</button>
 ```
 
-In this example the `disable` argument is used. The button will be disabled rather than hidden.
+##### Some and every modifiers
+
+The `some` and `every` arguments takes multiple subjects and will apply the same verb to all of
+them.
 
 ```vue
-<button v-can.some="'mark notifications'">Mark read</button>
-<button v-can.every="'archive posts'">Archive all</button>
+<table v-can.some="['edit', players]">
+<button v-can:sell.every="players">Sell team</button>
+<button v-can:delete.some="[project, sprintBoard]">Delete</button>
 ```
 
-The `some` and `every` arguments takes multiple subjects. See [browser-acl](https://github.com/mblarsen/browser-acl) for more info
-on how to use them.
+Note that the subjects do not need to be the some kind. In the third example above the delete
+button becomes visible if you either have delete permission on the project (think project owner)
+or you have it on the sprint board itself (a user with less permissions).
+
+See [browser-acl](https://github.com/mblarsen/browser-acl) for more info on how to use them.
 
 ### Helper
 
@@ -203,7 +291,7 @@ is the component member name of an instance of that class.
 
 E.g. if subject is `post` the directive will try to look up the data member `post` on the component.
 
-If `caseMode` is set to false this behaviour is disabled and `post` will be treated as a subject name.
+If `caseMode` is set to false this behavior is disabled and `post` will be treated as a subject name.
 
 ### directive
 `default: can`
@@ -233,7 +321,7 @@ Vue.use(Acl, user, acl => {...}, {strict: true}}
 Vue.use(Acl, user, acl => {...}, {strict: true, acl: {strict: true}}
 ```
 
-You can override this behaviour like this:
+You can override this behavior like this:
 
 ```javascript
 Vue.use(Acl, user, acl => {...}, {strict: true, acl: {strict: false}}
