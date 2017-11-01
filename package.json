@@ -1,7 +1,7 @@
 {
   "name": "vue-browser-acl",
   "description": "Easy ACL in Vue build on top of the browser-acl package.",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "license": "MIT",
   "main": "dist/vue-browser-acl.js",
   "files": [
