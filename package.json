@@ -1,7 +1,20 @@
 {
   "name": "vue-browser-acl",
   "description": "Easy ACL in Vue build on top of the browser-acl package.",
+  "author": "Michael Bøcker-Larsen <mblarsen@gmail.com>",
   "version": "0.5.2",
+  "keywords": [
+    "vue",
+    "plugin",
+    "directives",
+    "acl",
+    "permissions"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mblarsen/vue-browser-acl"
+  },
+  "bugs": "https://github.com/mblarsen/vue-browser-acl/issues",
   "license": "MIT",
   "main": "dist/vue-browser-acl.js",
   "files": [
