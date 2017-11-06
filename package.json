@@ -26,7 +26,7 @@
     "postversion": "git push && git push --tags"
   },
   "dependencies": {
-    "browser-acl": "^0.3.5"
+    "browser-acl": "^0.3.6"
   },
   "devDependencies": {
     "poi": "^9.4.1",
