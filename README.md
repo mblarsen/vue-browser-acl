@@ -341,3 +341,10 @@ Vue.use(Acl, user, acl => {...}, {strict: true, acl: {strict: false}}
 ## Limitation
 
 The directive does not work on `<template>` but you can still use a `v-if` and the `$can` helper function.
+
+## Related
+
+These are related projects with different approaches:
+
+* [`vue-kindergarten`](https://github.com/JiriChara/vue-kindergarten) similar in functionality, integrates with Nuxt.js
+* [`vue-acl`](https://github.com/leonardovilarinho/vue-acl) rather than saying what you can do you tell what the role is needed to perform an action.
