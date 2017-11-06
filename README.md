@@ -160,7 +160,7 @@ you evaluate multiple subjects at once (some, every).
 Modifiers are applied after the directive (first line) or argument (second line) and
 separated by a dot (third line) if several modifiers are used.
 
-##### Hide modifier
+##### `hide` modifier
 
 The hide modifier is also the default behavior so there is no need to apply it unless you
 want to explicitly state the behavior. It works like `v-if` by removing the component from
@@ -173,7 +173,7 @@ the DOM.
 
 The above two lines has the same effect.
 
-##### Disable modifier
+##### `disable` modifier
 
 The disable modifier applies the `disabled` argument to the tag, e.g. to disable a button that
 you are not allowed to use.
@@ -182,7 +182,16 @@ you are not allowed to use.
 <button v-can.disable="'delete post'">Delete</button>
 ```
 
-##### Some and every modifiers
+##### `not` modifier
+
+The not modifier reverses the query. In this example only if you cannot delete the job the div
+element is shown.
+
+```vue
+<div v-can:delete.not="job">Ask someone with permission to delete job</div>
+```
+
+##### `some` and `every` modifiers
 
 The `some` and `every` arguments takes multiple subjects and will apply the same verb to all of
 them.
@@ -328,3 +337,7 @@ You can override this behavior like this:
 ```javascript
 Vue.use(Acl, user, acl => {...}, {strict: true, acl: {strict: false}}
 ```
+
+## Limitation
+
+The directive does not work on `<template>` but you can still use a `v-if` and the `$can` helper function.
