@@ -48,9 +48,11 @@ yarn add vue-browser-acl
 import Vue from 'vue'
 import Acl from 'vue-browser-acl'
 
+const user = window.__INITIAL_STATE__.user
+
 Vue.use(Acl, user, (acl) => {
-  acl.rule(view, Post)
-  acl.rule([edit, delete], Post, (user, post) => post.userId === user.id)
+  acl.rule('view', Post)
+  acl.rule(['edit', 'delete'], Post, (user, post) => post.userId === user.id)
   acl.rule('moderate', Post, (user) => user.isModerator())
 })
 ```
