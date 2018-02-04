@@ -19,16 +19,21 @@
 ```vue
 <!-- Like v-if removes button if user does not have permission to transfer repo -->
 <button v-can:transfer="repo">Transfer</button>
+
 <!-- disables button if user does not have permission to transfer repo -->
 <button v-can:transfer.disable="repo">Transfer</button>
+
 <!-- string syntax, repo instance in context, Repo is the class -->
 <button v-can="'transfer repo'">Transfer</button>
 <button v-can="'create Repo'">Transfer</button>
+
 <!-- Send additional arguments (array flavor)-->
 <button v-can="['transfer', repo, otherArgs]">Transfer</button>
-<!-- Only show if at least one player can be edited -->
+
+<!-- Only show if user can edit at least one of the players -->
 <table v-can.some="['edit', players]">
-<!-- Only show if at least one player can be edited -->
+
+<!-- Only show if the user can sell all players -->
 <button v-can:sell.every="players">Sell team</button>
 ```
 
@@ -46,6 +51,8 @@ yarn add vue-browser-acl
 import Vue from 'vue'
 import Acl from 'vue-browser-acl'
 
+// example user from backend, you can provide a function
+// instead in case the user retrieved asynchronously
 const user = window.__INITIAL_STATE__.user
 
 Vue.use(Acl, user, (acl) => {
@@ -55,11 +62,14 @@ Vue.use(Acl, user, (acl) => {
 })
 ```
 
-You can pass in an actual user or a function that returns the users.
+You can pass in an actual user or a function that returns the users. This is
+useful if you don't have the user available right away if for instance it is
+fetched asynchronously.
 
 The second param is a callback that let's you define the rules. Alternatively you can pass
 a [preconfigured acl](https://github.com/mblarsen/browser-acl#setup) from
-the `browser-acl` package.
+the `browser-acl` package. This may be the better choice depending on your
+source bundling approach.
 
 See [browser-acl setup](https://github.com/mblarsen/browser-acl) for how to define rules and policies.
 
