@@ -14,6 +14,8 @@
 * Can be used on collections `v-can.some` or `v-can.every`
 * Can be used with **vue-router** to guard routes
 
+For more background on the "syntax design" read this short article: [Vue user permissions through directives](https://codeburst.io/reusable-vue-directives-v-can-753bf54e563f).
+
 ## Examples
 
 ```vue
