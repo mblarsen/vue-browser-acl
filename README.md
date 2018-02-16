@@ -5,7 +5,7 @@
 [![NPM version](http://img.shields.io/npm/v/vue-browser-acl.svg)](https://www.npmjs.com/package/vue-browser-acl/) [![](https://img.shields.io/npm/dm/vue-browser-acl.svg)](https://www.npmjs.com/package/vue-browser-acl/)
 [![Donate](https://img.shields.io/badge/%24-donate-red.svg)](https://freewallet.org/id/mblarsen/btc)
 
-> Easy ACL in Vue build on top of the [browser-acl](https://github.com/mblarsen/browser-acl) package.
+> Easy ACL in Vue for better UX. Build on top of the [browser-acl](https://github.com/mblarsen/browser-acl) package.
 
 * Easily manage permissions with [browser-acl](https://github.com/mblarsen/browser-acl) using rules and/or policies
 * Adds `v-can` directive with simple syntax: `v-can:create="'Post'"` (the class) and `v-can:edit="post"` an instance on the component
