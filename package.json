@@ -2,7 +2,7 @@
   "name": "vue-browser-acl",
   "description": "Easy ACL in Vue build on top of the browser-acl package.",
   "author": "Michael Bøcker-Larsen <mblarsen@gmail.com>",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "keywords": [
     "vue",
     "plugin",
