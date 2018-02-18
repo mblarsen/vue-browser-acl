@@ -32,5 +32,6 @@
     "poi": "^9.4.1",
     "vue": "2.4.4",
     "vue-template-compiler": "2.4.4"
-  }
+  },
+  "thanks": "https://flattr.com/@mblarsen"
 }
