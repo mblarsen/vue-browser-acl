@@ -78,6 +78,31 @@ See [browser-acl setup](https://github.com/mblarsen/browser-acl) for how to defi
 
 As an optional third parameter you can pass an [options](#options) object.
 
+### Plain objects vs function/class
+
+The above describes setup in applications where you use ES6 classes or named
+constructor functions to represent your models. If you use plain objects,
+however, you'll have to provide a function that maps the input to string
+representation of what the object is.
+
+In this example it is assumed that you have a property type on your object:
+
+```javascript
+acl.subjectMapper = s => typeof s === 'string' ? s : s.type
+```
+
+E.g. a post:
+
+```javascript
+{
+    type: 'Post',   // <-- this would be used to determine what rules to apply
+    title: 'ACL in the front-end',
+    author: 'Wow 🦀'
+}
+```
+
+See the details in browser-acl [Subject mapper section](https://github.com/mblarsen/browser-acl#subjectmapper).
+
 ## Usage
 
 You can use the module as directive, with vue-router, and as a helper function.
