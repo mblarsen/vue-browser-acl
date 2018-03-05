@@ -124,6 +124,9 @@ export default {
       Vue.prototype[helper] = function () {
         return acl.can(userAccessor(), ...arguments)
       }
+      Vue.prototype[helper].not = function () {
+        return !acl.can(userAccessor(), ...arguments)
+      }
       Vue.prototype[helper].every = function () {
         return acl.every(userAccessor(), ...arguments)
       }

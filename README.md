@@ -10,7 +10,7 @@
 
 * Easily manage permissions with [browser-acl](https://github.com/mblarsen/browser-acl) using rules and/or policies
 * Adds `v-can` directive with simple syntax: `v-can:create="'Post'"` (the class) and `v-can:edit="post"` an instance on the component
-* Adds `$can` helper function to the Vue prototype (optional)
+* Adds `$can` and `$can.not` helper function to the Vue prototype (optional)
 * Can be used to **hide** `v-can` or to **disable** `v-can.disable`
 * Can be used on collections `v-can.some` or `v-can.every`
 * Can be used with **vue-router** to guard routes
@@ -263,6 +263,8 @@ if (this.$can('edit', post)) {
 }
 ```
 
+You can negate `$can` with `$can.not`.
+
 If you don't want to install the helper function pass `helper: false` in the options.
 
 ### vue-router
@@ -353,7 +355,7 @@ You'll most likely only use this if you want to replace this module with an exis
 ### helper
 `default: true`
 
-Adds `$can` helper function to the Vue prototype when true.
+Adds `$can`, `$can.not`, `$can.some`, and `$can.every` helper function to the Vue prototype when `true`.
 
 ### router
 `default: undefined`
