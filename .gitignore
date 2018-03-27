@@ -4,3 +4,4 @@ examples/vuex/node_modules
 yarn-error.log*
 .dat
 tags
+dist/docs.md

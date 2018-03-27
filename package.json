@@ -23,12 +23,14 @@
   "scripts": {
     "build": "poi build",
     "version": "npm run build && git add -A dist",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "build:docs": "documentation build index.js -f md -o dist/docs.md"
   },
   "dependencies": {
     "browser-acl": "^0.4.0"
   },
   "devDependencies": {
+    "documentation": "^6.1.0",
     "poi": "^9.4.1",
     "vue": "2.4.4",
     "vue-template-compiler": "2.4.4"
