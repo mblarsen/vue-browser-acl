@@ -329,6 +329,23 @@ backend could perform a redirect. That said you have the option.
 Note that `next` is a wrapper of the function that vue-router provides by the same name. It takes the
 same arguments as the `can` function.
 
+##### Default fail route
+
+By default if you omit the 'fail' property from the a routes meta a failed
+check will redirect to `/`. You can change this behaviour by setting the option
+`failRoute`.
+
+This is useful if you use the library in an authentication flow. E.g. by
+setting it to `/login`.
+
+You can also use an object for more options ([see guards section in docs](https://router.vuejs.org/en/advanced/navigation-guards.html)):
+
+```
+failRoute: {path: '/login': replace: true}
+```
+
+This will use replace rather than push when redirecting to the login page.
+
 ## Options
 
 ### acl
@@ -352,6 +369,9 @@ If `caseMode` is set to false this behavior is disabled and `post` will be treat
 The name of the directive. E.g. `can` produces a directive called `v-can` and a helper function called `$can`.
 
 You'll most likely only use this if you want to replace this module with an existing one that uses a different name.
+
+### failRoue
+`default: /`
 
 ### helper
 `default: true`

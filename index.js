@@ -22,7 +22,8 @@ import Acl from 'browser-acl'
  * @param {Boolean} [options.caseMode=true] When true lower case subjects will be looked up on the vue context
  * @param {Boolean} [options.directive='can'] Name of the directive, and helper function
  * @param {Boolean} [options.helper=true] Adds helper function
- * @param {Boolean} [options.strict=false] Will fail if route permissions are absent.
+ * @param {Boolean} [options.strict=false] Causes redirect to fail route if route permissions are absent
+ * @param {String|Object} [options.failRoute='/'] Set a default fail route
  * @param {?Object}  options.router Vue router
  */
 export default {
@@ -38,6 +39,7 @@ export default {
       helper: true,
       directive: 'can',
       strict: false,
+      failRoute: '/',
     }, options)
 
     /* setup acl */
@@ -51,7 +53,7 @@ export default {
     acl.router = function (router) {
       options.router = router
       router.beforeEach((to, from, next) => {
-        const fail = to.meta.fail || '/'
+        const fail = to.meta.fail || options.failRoute
         const meta = to.meta || {}
 
         if (typeof meta.can === 'function') {
