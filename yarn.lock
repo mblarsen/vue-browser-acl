@@ -1204,9 +1204,9 @@ brorand@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/brorand/-/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
 
-browser-acl@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/browser-acl/-/browser-acl-0.4.0.tgz#dc933f8c05fc6425a07b6b90188b6629f261c400"
+browser-acl@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/browser-acl/-/browser-acl-0.5.0.tgz#041a0186352ad1d0a66868417b7b34e15cd01cbe"
 
 browser-resolve@^1.7.0:
   version "1.11.2"
