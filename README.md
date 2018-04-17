@@ -410,4 +410,4 @@ These are related projects with different approaches:
 
 * [`vue-kindergarten`](https://github.com/JiriChara/vue-kindergarten) uses a powerful sandbox pattern. Integrates with Nuxt.js
 * [`vue-acl`](https://github.com/leonardovilarinho/vue-acl) rather than saying what you can do you tell what the role is needed to perform an action.
-* [`casl-vue`]](https://github.com/stalniy/casl/tree/master/packages/casl-vue)
+* [`casl-vue`](https://github.com/stalniy/casl/tree/master/packages/casl-vue)
