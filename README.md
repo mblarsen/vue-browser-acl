@@ -20,7 +20,7 @@ For more background on the "syntax design" read this short article: [Vue user pe
 
 ## Examples
 
-```vue
+```
 <!-- Like v-if removes button if user does not have permission to transfer repo -->
 <button v-can:transfer="repo">Transfer</button>
 
