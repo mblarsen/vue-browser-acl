@@ -346,6 +346,10 @@ failRoute: {path: '/login': replace: true}
 
 This will use replace rather than push when redirecting to the login page.
 
+##### `$from`
+
+You can set the failRoute to the special value `$from` which will return the user to wherever they came from
+
 ##### Global rules
 
 You can also use [global rules](https://github.com/mblarsen/browser-acl#additional-parameters-and-global-rules)

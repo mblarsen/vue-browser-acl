@@ -88,7 +88,7 @@ export default {
           return next()
         }
 
-        next(fail)
+        next(fail === '$from' ? from.path : fail)
       })
     }
 
