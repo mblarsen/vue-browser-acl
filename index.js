@@ -58,6 +58,8 @@ export default {
     acl.router = function (router) {
       options.router = router
       router.beforeEach((to, from, next) => {
+        if (!to.meta || !to.meta.can) return next()
+
         const fail = to.meta.fail || options.failRoute
         const meta = to.meta || {}
 
