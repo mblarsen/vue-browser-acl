@@ -20,7 +20,7 @@ For more background on the "syntax design" read this short article: [Vue user pe
 
 ## Examples
 
-```
+```vue
 <!-- Like v-if removes button if user does not have permission to transfer repo -->
 <button v-can:transfer="repo">Transfer</button>
 
@@ -346,7 +346,50 @@ failRoute: {path: '/login': replace: true}
 
 This will use replace rather than push when redirecting to the login page.
 
+##### Global rules
+
+You can also use [global rules](https://github.com/mblarsen/browser-acl#additional-parameters-and-global-rules)
+in your routes.
+
+However when running in strict mode you have to be explicit about using these in your routes.
+
+```javascript
+{
+  path: 'village/:villageId',
+  component: Pillager,
+  meta: {
+    can: 'pillage'
+  }
+}
+```
+
+In strict mode:
+
+```javascript
+import {GlobalRule} from 'browser-acl'
+...
+{
+  path: 'village/:villageId',
+  component: Pillager,
+  meta: {
+    can: `pillage ${GlobalRule}`
+  }
+}
+```
+
+See options below.
+
 ## Options
+
+### assumeGlobal
+`default: true`
+
+When true you can use [global
+rules](https://github.com/mblarsen/browser-acl#additional-parameters-and-global-rules)
+in your routes without explicitly marking them as global.
+
+Note: In strict mode this is turned of. You can override this by explicitly
+setting assumeGlobal to true.
 
 ### acl
 `default: {}`
@@ -370,7 +413,7 @@ The name of the directive. E.g. `can` produces a directive called `v-can` and a 
 
 You'll most likely only use this if you want to replace this module with an existing one that uses a different name.
 
-### failRoue
+### failRoute
 `default: /`
 
 ### helper

@@ -1,4 +1,4 @@
-import Acl from 'browser-acl'
+import Acl, { GlobalRule } from 'browser-acl'
 
 /**
  * VueAcl constructor function
@@ -24,23 +24,28 @@ import Acl from 'browser-acl'
  * @param {Boolean} [options.helper=true] Adds helper function
  * @param {Boolean} [options.strict=false] Causes redirect to fail route if route permissions are absent
  * @param {String|Object} [options.failRoute='/'] Set a default fail route
+ * @param {Boolean} [options.assumeGlobal=true] If no subject is specified in route assume it is a global rule
  * @param {?Object}  options.router Vue router
  */
 export default {
   install: function (Vue, user, setupCallback, options = {}) {
-
     /* ensure userAccessor is function */
     const userAccessor = typeof user === 'function' ? user : () => user
 
     /* defaults */
-    options = Object.assign({
-      acl: {strict: Boolean(options.strict)},
-      caseMode: true,
-      helper: true,
-      directive: 'can',
-      strict: false,
-      failRoute: '/',
-    }, options)
+    const strict = Boolean(options.strict)
+    options = Object.assign(
+      {
+        acl: { strict },
+        caseMode: true,
+        helper: true,
+        directive: 'can',
+        strict: false,
+        failRoute: '/',
+        assumeGlobal: !strict
+      },
+      options
+    )
 
     /* setup acl */
     let acl = setupCallback
@@ -58,7 +63,10 @@ export default {
 
         if (typeof meta.can === 'function') {
           const next_ = (verb, subject, ...otherArgs) => {
-            if ((subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) || (!subject && !options.strict)) {
+            if (
+              (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) ||
+              (!subject && !options.strict)
+            ) {
               return next()
             }
             next(fail)
@@ -66,10 +74,18 @@ export default {
           return meta.can(to, from, next_)
         }
 
-        const [verb = null, subject = null] = (meta.can || '').split(' ')
-        if ((subject && acl.can(userAccessor(), verb, subject)) || (!subject && !options.strict)) {
+        const [
+          verb = null,
+          subject = options.assumeGlobal ? GlobalRule : null
+        ] = (meta.can || '').split(' ')
+
+        if (
+          (subject && acl.can(userAccessor(), verb, subject)) ||
+          (!subject && !options.strict)
+        ) {
           return next()
         }
+
         next(fail)
       })
     }
@@ -80,20 +96,24 @@ export default {
     }
 
     /* create directive */
-    Vue.directive(options.directive, function (el, binding, vnode) {
-      const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
+    Vue.directive(options.directive, function(el, binding, vnode) {
+      const behaviour = binding.modifiers.disable ? 'disable' : "hide"
 
       let verb, verbArg, subject, params
       verbArg = binding.arg
       if (Array.isArray(binding.value)) {
-        [verb, subject, ...params] = verbArg === undefined
-          ? binding.value
-          : [verbArg, ...binding.value]
+        [verb, subject, ...params] =
+          verbArg === undefined ? binding.value : [verbArg, ...binding.value]
       } else if (typeof binding.value === 'string') {
-        [verb, subject] = verbArg === undefined
-          ? binding.value.split(' ')
-          : [verbArg, binding.value]
-        if (typeof subject === 'string' && options.caseMode && subject[0].match(/[a-z]/)) {
+        [verb, subject] =
+          verbArg === undefined
+            ? binding.value.split(' ')
+            : [verbArg, binding.value]
+        if (
+          typeof subject === 'string' &&
+          options.caseMode &&
+          subject[0].match(/[a-z]/)
+        ) {
           subject = vnode.context[subject]
         }
         params = []
@@ -107,7 +127,10 @@ export default {
         throw new Error('Missing verb or subject')
       }
 
-      const aclMethod = (binding.modifiers.some && 'some') || (binding.modifiers.every && 'every') || 'can'
+      const aclMethod =
+        (binding.modifiers.some && 'some') ||
+        (binding.modifiers.every && 'every') ||
+        'can'
       const ok = acl[aclMethod](userAccessor(), verb, subject, ...params)
       const not = binding.modifiers.not
 

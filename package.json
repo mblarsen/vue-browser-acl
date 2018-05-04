@@ -27,7 +27,7 @@
     "build:docs": "documentation build index.js -f md -o dist/docs.md"
   },
   "dependencies": {
-    "browser-acl": "^0.5.0"
+    "browser-acl": "^0.7.0"
   },
   "devDependencies": {
     "documentation": "^6.1.0",
