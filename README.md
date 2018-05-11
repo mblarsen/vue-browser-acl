@@ -2,9 +2,8 @@
 
 [![Build status](http://img.shields.io/travis/mblarsen/browser-acl.svg)](http://travis-ci.org/mblarsen/vue-browser-acl)
 [![Known vulnerabilities](https://snyk.io/test/github/mblarsen/vue-browser-acl/badge.svg)](https://snyk.io/test/github/mblarsen/vue-browser-acl)
-[![NPM version](http://img.shields.io/npm/v/vue-browser-acl.svg)](https://www.npmjs.com/package/vue-browser-acl) 
 [![Monthly downloads](https://img.shields.io/npm/dm/vue-browser-acl.svg)](https://www.npmjs.com/package/vue-browser-acl)
-[![Chat](https://img.shields.io/badge/chat-on%20discord-7289DA.svg?style=flat-square)](https://discord.gg/fg7c4SC)
+[![NPM version](http://img.shields.io/npm/v/vue-browser-acl.svg)](https://www.npmjs.com/package/vue-browser-acl) 
 
 > Easy ACL in Vue for better UX. Build on top of the [browser-acl](https://github.com/mblarsen/browser-acl) package.
 
