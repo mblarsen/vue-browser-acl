@@ -8,11 +8,13 @@
 > Easy ACL in Vue for better UX. Build on top of the [browser-acl](https://github.com/mblarsen/browser-acl) package.
 
 * Easily manage permissions with [browser-acl](https://github.com/mblarsen/browser-acl) using rules and/or policies
-* Adds `v-can` directive with simple syntax: `v-can:create="'Post'"` (the class) and `v-can:edit="post"` an instance on the component
-* Adds `$can` and `$can.not` helper function to the Vue prototype (optional)
-* Can be used to **hide** `v-can` or to **disable** `v-can.disable`
-* Can be used on collections `v-can.some` or `v-can.every`
-* Can be used with **vue-router** to guard routes
+* Adds `v-can` directive with simple syntax: 
+  - `v-can:edit="post"` an instance on the component
+  - `v-can:create="'Post'"` (the type)
+* Optionally Adds `$can` and `$can.not` helper functions
+* Can **hide** `v-can` or to just **disable** `v-can.disable` a section, tab, or button
+* Works collections of objects `v-can.some` or `v-can.every`
+* Works with **vue-router** to guard routes
 * Works with **vuex** and plain objects
 
 For more background on the "syntax design" read this short article: [Vue user permissions through directives](https://codeburst.io/reusable-vue-directives-v-can-753bf54e563f).
