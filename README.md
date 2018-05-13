@@ -5,7 +5,7 @@
 [![Monthly downloads](https://img.shields.io/npm/dm/vue-browser-acl.svg)](https://www.npmjs.com/package/vue-browser-acl)
 [![NPM version](http://img.shields.io/npm/v/vue-browser-acl.svg)](https://www.npmjs.com/package/vue-browser-acl) 
 
-> Easy ACL in Vue for better UX. Build on top of the [browser-acl](https://github.com/mblarsen/browser-acl) package.
+> Easy user access control in Vue for better UX. Build on top of the [browser-acl](https://github.com/mblarsen/browser-acl) package.
 
 * Easily manage permissions with [browser-acl](https://github.com/mblarsen/browser-acl) using rules and/or policies
 * Adds `v-can` directive with simple syntax: 
