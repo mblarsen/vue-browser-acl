@@ -11,7 +11,7 @@
 * Adds `v-can` directive with simple syntax: 
   - `v-can:edit="post"` an instance on the component
   - `v-can:create="'Post'"` (the type)
-* Optionally Adds `$can` and `$can.not` helper functions
+* Optionally adds `$can` and `$can.not` helper functions
 * Can **hide** `v-can` or to just **disable** `v-can.disable` a section, tab, or button
 * Works collections of objects `v-can.some` or `v-can.every`
 * Works with **vue-router** to guard routes
