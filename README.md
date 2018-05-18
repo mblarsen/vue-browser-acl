@@ -36,7 +36,7 @@ For more background on the "syntax design" read this short article: [Vue user pe
 <button v-can="['transfer', repo, otherArgs]">Transfer</button>
 
 <!-- Only show if user can edit at least one of the players -->
-<table v-can.some="['edit', players]">
+<table v-can:edit.some="players">
 
 <!-- Only show if the user can sell all players -->
 <button v-can:sell.every="players">Sell team</button>
