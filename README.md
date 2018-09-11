@@ -129,6 +129,7 @@ Verb, subject and optional parameters are passed as an array as the value for th
 <button v-can="['delete', comment, post]">Delete</button>
 ```
 
+<details>
 All arguments from the third and onwards will be passed to the ACL for evaluation.
 
 Pros:
@@ -139,6 +140,7 @@ Pros:
 Cons:
 
 - Doesn't read so easily when skimming the markup
+</details>
 
 ##### String flavor
 
@@ -150,6 +152,7 @@ up the value of the directive.
 <button v-can="'edit post'">Edit</button>
 ```
 
+<details>
 The string `create Post` is interpreted as the verb 'create' on the subject with name
 'Post' (a class name).  The string `edit post` is interpreted as the verb 'edit' on
 the subject that is a property on the component.
@@ -163,6 +166,7 @@ Cons:
 - Cannot take additional arguments
 - Since the value is a string you lose the vue-compiler errors if you refer to something
   that doesn't exist.
+</details>
 
 ##### Argument flavor
 
@@ -177,6 +181,7 @@ plain subject object as well.
 <button v-can:delete="[comment, post]">Delete</button>
 ```
 
+<details>
 Pros:
 
 - Easy to read for simple cases
@@ -186,6 +191,8 @@ Pros:
 Cons:
 
 - Can be slightly harder to comprehend as you make use of modifiers.
+
+</details>
 
 #### Modifiers
 
@@ -274,19 +281,23 @@ If you don't want to install the helper function pass `helper: false` in the opt
 There are two ways to hook up the vue-router. Either during setup of the Acl or later calling the router
 init funtion.
 
-##### Option 1: setup
+<details>
+  <summary>Option 1: setup</summary>
 
 ```javascript
 Vue.use(Acl, user, (acl) => {
     ..
 }, {router});
 ```
+</details>
 
-##### Option 2: init function
+<details>
+  <summary>Option 2: init function</summary>
 
 ```javascript
 acl.router(router)
 ```
+</details>
 
 #### Route permissions
 
