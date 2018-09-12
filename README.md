@@ -109,17 +109,13 @@ See the details in browser-acl [Subject mapper section](https://github.com/mblar
 
 You can use the module as directive, with vue-router, and as a helper function.
 
-### Directive
-
 The `v-can` directive can be used in three different flavors and you can apply one or more modifiers
 that alters the behavior of the directive.
-
-#### Flavors
 
 There are three different flavors, that to some degree can be mixed: array, string, and argument. For
 most cases the _argument flavor_ would be the preferred syntax.
 
-##### Array flavor
+### Array flavor
 
 Verb, subject and optional parameters are passed as an array as the value for the directive.
 
@@ -142,7 +138,7 @@ Cons:
 - Doesn't read so easily when skimming the markup
 </details>
 
-##### String flavor
+### String flavor
 
 Verb and subject is combined in a string like `create Post` or `edit post` which makes
 up the value of the directive.
@@ -168,7 +164,7 @@ Cons:
   that doesn't exist.
 </details>
 
-##### Argument flavor
+### Argument flavor
 
 In this flavor the verb is passed as an argument to the directive and for the value can
 use either string or array flavor with the verb removed. Additionally the value can be a
@@ -194,7 +190,7 @@ Cons:
 
 </details>
 
-#### Modifiers
+### Modifiers
 
 There are four modifiers. Two that affects the element (hide, disable) and two that let's
 you evaluate multiple subjects at once (some, every).
@@ -208,7 +204,7 @@ you evaluate multiple subjects at once (some, every).
 Modifiers are applied after the directive (first line) or argument (second line) and
 separated by a dot (third line) if several modifiers are used.
 
-##### `hide` modifier
+#### `hide` modifier
 
 The hide modifier is also the default behavior so there is no need to apply it unless you
 want to explicitly state the behavior. It works like `v-if` by removing the component from
@@ -221,7 +217,7 @@ the DOM.
 
 The above two lines has the same effect.
 
-##### `disable` modifier
+#### `disable` modifier
 
 The disable modifier applies the `disabled` argument to the tag, e.g. to disable a button that
 you are not allowed to use.
@@ -230,7 +226,7 @@ you are not allowed to use.
 <button v-can.disable="'delete post'">Delete</button>
 ```
 
-##### `not` modifier
+#### `not` modifier
 
 The not modifier reverses the query. In this example only if you cannot delete the job the div
 element is shown.
@@ -239,7 +235,7 @@ element is shown.
 <div v-can:delete.not="job">Ask someone with permission to delete job</div>
 ```
 
-##### `some` and `every` modifiers
+#### `some` and `every` modifiers
 
 The `some` and `every` arguments takes multiple subjects and will apply the same verb to all of
 them.
@@ -299,8 +295,6 @@ acl.router(router)
 ```
 </details>
 
-#### Route permissions
-
 You configure routes by adding `can` meta property to the route. E.g. if a router
 requires create permissions for "Post":
 
@@ -341,7 +335,7 @@ backend could perform a redirect. That said you have the option.
 Note that `next` is a wrapper of the function that vue-router provides by the same name. It takes the
 same arguments as the `can` function.
 
-##### Default fail route
+#### Default fail route
 
 By default if you omit the 'fail' property from the a routes meta a failed
 check will redirect to `/`. You can change this behaviour by setting the option
@@ -358,11 +352,11 @@ failRoute: {path: '/login': replace: true}
 
 This will use replace rather than push when redirecting to the login page.
 
-##### `$from`
+#### `$from`
 
 You can set the failRoute to the special value `$from` which will return the user to wherever they came from
 
-##### Global rules
+### Global rules
 
 You can also use [global rules](https://github.com/mblarsen/browser-acl#additional-parameters-and-global-rules)
 in your routes.
