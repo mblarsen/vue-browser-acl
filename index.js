@@ -180,7 +180,6 @@ function commentNode(el, vnode) {
   vnode.text = ' '
   vnode.elm = comment
   vnode.isComment = true
-  vnode.context = undefined
   vnode.tag = undefined
   vnode.data.directives = undefined
 
