@@ -453,10 +453,6 @@ You can override this behavior like this:
 Vue.use(Acl, user, acl => {...}, {strict: true, acl: {strict: false}}
 ```
 
-## Limitation
-
-The directive does not work on `<template>` but you can still use a `v-if` and the `$can` helper function.
-
 ## Related
 
 These are related projects with different approaches:
