@@ -22,13 +22,16 @@ For more background on the "syntax design" read this short article: [Vue user pe
 ## Examples
 
 ```vue
-<!-- Like v-if removes button if user does not have permission to transfer repo -->
+<!-- Similar to v-if removes button if user does not have permission to transfer repo -->
 <button v-can:transfer="repo">Transfer</button>
 
-<!-- disables button if user does not have permission to transfer repo -->
+<!-- Can be used without a subject -->
+<button v-can:review">Review</button>
+
+<!-- Disables button if user does not have permission to transfer repo -->
 <button v-can:transfer.disable="repo">Transfer</button>
 
-<!-- string syntax, repo instance in context, Repo is the class -->
+<!-- String syntax, repo instance in context, Repo is the class -->
 <button v-can="'transfer repo'">Transfer</button>
 <button v-can="'create Repo'">Transfer</button>
 
@@ -171,6 +174,7 @@ use either string or array flavor with the verb removed. Additionally the value 
 plain subject object as well.
 
 ```vue
+<button v-can:review>Review</button>
 <button v-can:create="'Post'">New</button>
 <button v-can:edit="'post'">Edit</button>
 <button v-can:edit="post">Edit</button>
@@ -251,6 +255,21 @@ button becomes visible if you either have delete permission on the project (thin
 or you have it on the sprint board itself (a user with less permissions).
 
 See [browser-acl](https://github.com/mblarsen/browser-acl) for more info on how to use them.
+
+#### `global` modifier
+
+The global modifier explicitly tells the plugin that you mean to address
+a global rule. In most cases this can be left out.
+
+```vue
+<!-- implicit -->
+<button v-can:review>Review</button>
+<button v-can="'review'">Review</button>
+
+<!-- explicit -->
+<button v-can="`review ${GlobalRule}`">Review</button>
+<button v-can.global="'review'">Review</button>
+```
 
 ### Helper
 
@@ -394,8 +413,7 @@ See options below.
 ### assumeGlobal
 `default: true`
 
-When true you can use [global
-rules](https://github.com/mblarsen/browser-acl#additional-parameters-and-global-rules)
+When true you can use [global rules](https://github.com/mblarsen/browser-acl#additional-parameters-and-global-rules)
 in your routes without explicitly marking them as global.
 
 Note: In strict mode this is turned of. You can override this by explicitly

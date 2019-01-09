@@ -104,25 +104,26 @@ export default {
       let verb, verbArg, subject, params
       verbArg = binding.arg
       if (Array.isArray(binding.value)) {
-        [verb, subject, ...params] =
-          verbArg === undefined ? binding.value : [verbArg, ...binding.value]
+        [verb, subject, params] = binding.modifiers.global
+          ? arrayToGlobalExprTpl(binding)
+          : arrayToExprTpl(binding)
       } else if (typeof binding.value === 'string') {
-        [verb, subject] =
-          verbArg === undefined
-            ? binding.value.split(' ')
-            : [verbArg, binding.value]
-        if (
-          typeof subject === 'string' &&
-          options.caseMode &&
-          subject[0].match(/[a-z]/)
-        ) {
-          subject = vnode.context[subject]
-        }
-        params = []
+        [verb, subject, params] = stringToExprTpl(binding, vnode, options)
       } else if (verbArg && typeof binding.value === 'object') {
         verb = verbArg
         subject = binding.value
         params = []
+      } else if (binding.value === undefined && !binding.modifiers.global && options.assumeGlobal) {
+        // Fall back to global if no value is provided
+        verb = verbArg
+        subject = GlobalRule
+        params = []
+      }
+
+      if (options.assumeGlobal && !subject) {
+        subject = GlobalRule
+        params = params || []
+        verb = verb || verbArg
       }
 
       if (!verb || !subject) {
@@ -133,6 +134,7 @@ export default {
         (binding.modifiers.some && 'some') ||
         (binding.modifiers.every && 'every') ||
         'can'
+
       const ok = acl[aclMethod](userAccessor(), verb, subject, ...params)
       const not = binding.modifiers.not
 
@@ -190,4 +192,43 @@ function commentNode(el, vnode) {
   if (el.parentNode) {
     el.parentNode.replaceChild(comment, el)
   }
+}
+
+/**
+ * Maps binding.value of type array to expression tuple
+ */
+const arrayToExprTpl = ({arg, value}) => ([
+  arg || value[0],
+  arg ? value[0] : value[1],
+  arg ? value.slice(1) : value.slice(2)
+])
+
+/**
+ * Maps binding.value of type array to global expression tuple
+ */
+const arrayToGlobalExprTpl = ({arg, value}) => ([
+  arg || value[0],
+  GlobalRule,
+  arg ? value : value.slice(1)
+])
+
+/**
+ * Maps binding.value of type string to expression tuple
+ */
+const stringToExprTpl = ({arg, value, modifiers}, vnode, options) => {
+  let [verb, subject] = arg ? [arg, value] : value.split(' ')
+
+  if (subject && modifiers.global) {
+    throw new Error('You cannot provide subject and use global modifier at the same time')
+  }
+
+  if (
+    typeof subject === 'string' &&
+    options.caseMode &&
+    subject[0].match(/[a-z]/)
+  ) {
+    subject = vnode.context[subject]
+  }
+
+  return [verb, subject, []]
 }
