@@ -26,7 +26,7 @@ For more background on the "syntax design" read this short article: [Vue user pe
 <button v-can:transfer="repo">Transfer</button>
 
 <!-- Can be used without a subject -->
-<button v-can:review">Review</button>
+<button v-can:review>Review</button>
 
 <!-- Disables button if user does not have permission to transfer repo -->
 <button v-can:transfer.disable="repo">Transfer</button>
