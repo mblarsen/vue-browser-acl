@@ -50,6 +50,12 @@ Router and helper examples are available below.
 ## Install
 
 ```javascript
+npm install vue-browser-acl
+```
+
+or
+
+```javascript
 yarn add vue-browser-acl
 ```
 
