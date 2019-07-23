@@ -58,36 +58,36 @@ export default {
     acl.router = function (router) {
       options.router = router
       router.beforeEach((to, from, next) => {
-        if (!to.meta || !to.meta.can) return next()
-
-        const fail = to.meta.fail || options.failRoute
-        const meta = to.meta || {}
+        /* array of metas from all matched routes, from parent to child */
+        const metas = to.matched
+          .filter(route => route.meta && route.meta.can)
+          .map(route => route.meta)
 
         const canNavigate = (verb, subject, ...otherArgs) => {
           return (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) ||
             (!subject && !options.strict)
         }
 
-        if (typeof meta.can === 'function') {
-          const next_ = (verb, subject, ...otherArgs) => {
-            if (canNavigate(verb, subject, ...otherArgs)) {
-              return next()
+        for (const meta of metas) {
+          const fail = (meta.fail === '$from' ? from.path : meta.fail) || options.failRoute
+
+          if (typeof meta.can === 'function') {
+            const next_ = (verb, subject, ...otherArgs) => {
+              // TODO: `next()` or `next(to.path)`?
+              return canNavigate(verb, subject, ...otherArgs) ? next() : next(fail)
             }
-            next(fail)
+            meta.can(to, from, next_)
+          } else if (typeof meta.can === 'string') {
+            const [
+              verb = null,
+              subject = options.assumeGlobal ? GlobalRule : null
+            ] = (meta.can || '').split(' ')
+            if (!canNavigate(verb, subject)) {
+              return next(fail)
+            }
           }
-          return meta.can(to, from, next_)
         }
-
-        const [
-          verb = null,
-          subject = options.assumeGlobal ? GlobalRule : null
-        ] = (meta.can || '').split(' ')
-
-        if (canNavigate(verb, subject)) {
-          return next()
-        }
-
-        next(fail === '$from' ? from.path : fail)
+        return next()
       })
     }
 
