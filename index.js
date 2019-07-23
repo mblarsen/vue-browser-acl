@@ -26,6 +26,7 @@ import Acl, { GlobalRule } from 'browser-acl'
  * @param {String|Object} [options.failRoute='/'] Set a default fail route
  * @param {Boolean} [options.assumeGlobal=true] If no subject is specified in route assume it is a global rule
  * @param {?Object}  options.router Vue router
+ * @param {Boolean} options.ignoreParentRoute
  */
 export default {
   install: function (Vue, user, setupCallback, options = {}) {
@@ -42,7 +43,8 @@ export default {
         directive: 'can',
         strict: false,
         failRoute: '/',
-        assumeGlobal: !strict
+        assumeGlobal: !strict,
+        ignoreParentRoute: true
       },
       options
     )
@@ -58,13 +60,20 @@ export default {
     acl.router = function (router) {
       options.router = router
       router.beforeEach((to, from, next) => {
-        /* array of metas from all matched routes, from parent to child */
-        const metas = to.matched
+        /* ignore parent route property */
+        const ignoreParentRoute = (to.meta && to.meta.ignoreParentRoute != null)
+          ? to.meta.ignoreParentRoute
+          : options.ignoreParentRoute
+        const matched = (ignoreParentRoute ? [to] : to.matched)
+          .map((item, idx, arr) => arr[arr.length - 1 - idx])
+
+        /* array of metas from all matched routes, from child to parent */
+        const metas = matched
           .filter(route => route.meta && route.meta.can)
           .map(route => route.meta)
 
         const canNavigate = (verb, subject, ...otherArgs) => {
-          return (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) || 
+          return (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) ||
             (!subject && !options.strict)
         }
 
@@ -73,10 +82,9 @@ export default {
 
           if (typeof meta.can === 'function') {
             const next_ = (verb, subject, ...otherArgs) => {
-              // TODO: `next()` or `next(to.path)`?
-              return canNavigate(verb, subject, ...otherArgs) ? next() : next(fail)
+              canNavigate(verb, subject, ...otherArgs) ? next() : next(fail)
             }
-            meta.can(to, from, next_)
+            return meta.can(to, from, next_)
           } else if (typeof meta.can === 'string') {
             const [
               verb = null,
