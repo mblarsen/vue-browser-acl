@@ -143,6 +143,8 @@ export default {
           commentNode(el, vnode)
         } else if (behaviour === 'disable') {
           el.disabled = true
+        } else if (behaviour === 'readonly') {
+          el.readOnly = true
         }
       }
     })

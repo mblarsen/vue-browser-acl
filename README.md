@@ -30,6 +30,8 @@ For more background on the "syntax design" read this short article: [Vue user pe
 
 <!-- Disables button if user does not have permission to transfer repo -->
 <button v-can:transfer.disable="repo">Transfer</button>
+<!-- ...or makes input read only if user cannot edit a post -->
+<input v-can:edit.readonly="post" type="text" name="title"/>
 
 <!-- String syntax, repo instance in context, Repo is the class -->
 <button v-can="'transfer repo'">Transfer</button>
@@ -202,7 +204,7 @@ Cons:
 
 ### Modifiers
 
-There are four modifiers. Two that affects the element (hide, disable) and two that let's
+There are a few modifiers. Three that affects the element (hide, disable, readonly) and two that let's
 you evaluate multiple subjects at once (some, every).
 
 ```vue
@@ -229,8 +231,15 @@ The above two lines has the same effect.
 
 #### `disable` modifier
 
-The disable modifier applies the `disabled` argument to the tag, e.g. to disable a button that
+The disable modifier applies the `disabled` attribute to the tag, e.g. to disable a button that
 you are not allowed to use.
+
+#### `readonly` modifier
+
+The read only modifier applies the `readonly` attribute to the tag, e.g. to make an input read only 
+if you don't have permission to edit.
+
+Note: The `readonly` attribute doesn't work on all inputs. Checkboxes for instance doesn't support it.
 
 ```vue
 <button v-can.disable="'delete post'">Delete</button>
