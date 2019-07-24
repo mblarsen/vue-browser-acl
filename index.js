@@ -63,12 +63,14 @@ export default {
         const fail = to.meta.fail || options.failRoute
         const meta = to.meta || {}
 
+        const canNavigate = (verb, subject, ...otherArgs) => {
+          return (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) ||
+            (!subject && !options.strict)
+        }
+
         if (typeof meta.can === 'function') {
           const next_ = (verb, subject, ...otherArgs) => {
-            if (
-              (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) ||
-              (!subject && !options.strict)
-            ) {
+            if (canNavigate(verb, subject, ...otherArgs)) {
               return next()
             }
             next(fail)
@@ -81,10 +83,7 @@ export default {
           subject = options.assumeGlobal ? GlobalRule : null
         ] = (meta.can || '').split(' ')
 
-        if (
-          (subject && acl.can(userAccessor(), verb, subject)) ||
-          (!subject && !options.strict)
-        ) {
+        if (canNavigate(verb, subject)) {
           return next()
         }
 
