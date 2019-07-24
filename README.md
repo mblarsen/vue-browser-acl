@@ -234,16 +234,16 @@ The above two lines has the same effect.
 The disable modifier applies the `disabled` attribute to the tag, e.g. to disable a button that
 you are not allowed to use.
 
+```vue
+<button v-can.disable="'delete post'">Delete</button>
+```
+
 #### `readonly` modifier
 
 The read only modifier applies the `readonly` attribute to the tag, e.g. to make an input read only 
 if you don't have permission to edit.
 
 Note: The `readonly` attribute doesn't work on all inputs. Checkboxes for instance doesn't support it.
-
-```vue
-<button v-can.disable="'delete post'">Delete</button>
-```
 
 #### `not` modifier
 
