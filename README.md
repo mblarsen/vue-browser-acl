@@ -355,10 +355,10 @@ Optionally you have the option to specify a callback:
   path: 'posts/: postId',
   component: PostEditor,
   meta: {
-    can: function (to, from, next) {
-      axios.get(/* fetch post async */)
-        .then({post} => next('delete', post))
-    }
+    can: function (to, from, can) {
+      return axios.get(/* fetch post async */)
+        .then({post} => can('delete', post))
+    },
     fail: '/posts'
   }
 }
@@ -366,9 +366,6 @@ Optionally you have the option to specify a callback:
 
 Normally it would be better to prevent this route from being visited in the first place. Also the
 backend could perform a redirect. That said you have the option.
-
-Note that `next` is a wrapper of the function that vue-router provides by the same name. It takes the
-same arguments as the `can` function.
 
 #### Default fail route
 
