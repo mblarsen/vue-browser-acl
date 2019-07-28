@@ -26,7 +26,6 @@ import Acl, { GlobalRule } from 'browser-acl'
  * @param {String|Object} [options.failRoute='/'] Set a default fail route
  * @param {Boolean} [options.assumeGlobal=true] If no subject is specified in route assume it is a global rule
  * @param {?Object}  options.router Vue router
- * @param {Boolean} options.ignoreParentRoute
  */
 export default {
   install: function (Vue, user, setupCallback, options = {}) {
@@ -59,43 +58,78 @@ export default {
     /* router init function */
     acl.router = function (router) {
       options.router = router
-      router.beforeEach((to, from, next) => {
-        /* ignore parent route property */
-        const ignoreParentRoute = (to.meta && to.meta.ignoreParentRoute != null)
-          ? to.meta.ignoreParentRoute
-          : options.ignoreParentRoute
-        const matched = (ignoreParentRoute ? [to] : to.matched)
-          .map((item, idx, arr) => arr[arr.length - 1 - idx])
 
-        /* array of metas from all matched routes, from child to parent */
-        const metas = matched
+      const canNavigate = (verb, subject, ...otherArgs) => {
+        return (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) ||
+          (!subject && !options.strict)
+      }
+
+      /* convert 'edit Post' to ['edit', 'Post'] */
+      const metaToStatementPair = meta => {
+        const [
+          verb = null,
+          subject = options.assumeGlobal ? GlobalRule : null
+        ] = (meta.can || '').split(' ')
+        return [verb, subject]
+      }
+
+      /**
+       * chain all can-statements and functions as promises
+       * each can-function must return a promise (in strict
+       * mode at least). To break the chain return a none
+       * true value
+       */
+      const chainCans = (metas, to, from) => {
+        // store most recent fail
+        let fail = null
+        const chain = metas.reduce((chain, meta) => {
+          return chain
+            .then(result => {
+              if (result !== true) {
+                return result
+              }
+
+              fail = meta.fail
+
+              const nextPromise = typeof meta.can === 'function'
+                ? meta.can(to, from, canNavigate)
+                : Promise.resovle(canNavigate(...metaToStatementPair(meta)))
+
+              if (nextPromise instanceof Promise) {
+                return nextPromise;
+              }
+
+              if (options.strict) {
+                throw new Error('$route.meta.can must return a promise in strict mode')
+              }
+              return Boolean(nextPromise)
+            })
+            .catch(error => false) // convert errors to false
+        }, Promise.resolve(true))
+
+        /* getter to access fail route later */
+        chain.getFail = () => {
+          return fail
+        }
+
+        return chain
+      }
+
+      router.beforeEach((to, from, next) => {
+        const metas = to.matched
           .filter(route => route.meta && route.meta.can)
           .map(route => route.meta)
 
-        const canNavigate = (verb, subject, ...otherArgs) => {
-          return (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) ||
-            (!subject && !options.strict)
-        }
-
-        for (const meta of metas) {
-          const fail = (meta.fail === '$from' ? from.path : meta.fail) || options.failRoute
-
-          if (typeof meta.can === 'function') {
-            const next_ = (verb, subject, ...otherArgs) => {
-              canNavigate(verb, subject, ...otherArgs) ? next() : next(fail)
-            }
-            return meta.can(to, from, next_)
-          } else if (typeof meta.can === 'string') {
-            const [
-              verb = null,
-              subject = options.assumeGlobal ? GlobalRule : null
-            ] = (meta.can || '').split(' ')
-            if (!canNavigate(verb, subject)) {
-              return next(fail)
-            }
+        const chain = chainCans(metas, to, from)
+        chain.then(result => {
+          if (result === true) {
+            return next()
           }
-        }
-        return next()
+          const fail = chain.getFail() === '$from'
+            ? from.path
+            : chain.getFail()
+          next(fail || options.failRoute)
+        })
       })
     }
 
@@ -106,7 +140,7 @@ export default {
 
     /* create directive */
     Vue.directive(options.directive, function(el, binding, vnode) {
-      const behaviour = binding.modifiers.disable ? 'disable' : "hide"
+      const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
 
       let verb, verbArg, subject, params
       verbArg = binding.arg
