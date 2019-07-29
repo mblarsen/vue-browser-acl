@@ -352,7 +352,7 @@ Optionally you have the option to specify a callback:
 
 ```javascript
 {
-  path: 'posts/: postId',
+  path: 'posts/:postId',
   component: PostEditor,
   meta: {
     can: function (to, from, can) {
