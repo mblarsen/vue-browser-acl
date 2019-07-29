@@ -43,7 +43,6 @@ export default {
         strict: false,
         failRoute: '/',
         assumeGlobal: !strict,
-        ignoreParentRoute: true
       },
       options
     )
