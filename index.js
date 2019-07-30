@@ -79,7 +79,6 @@ export default {
        * true value
        */
       const chainCans = (metas, to, from) => {
-        // store most recent fail
         let fail = null
         const chain = metas.reduce((chain, meta) => {
           return chain
@@ -94,23 +93,15 @@ export default {
                 ? meta.can(to, from, canNavigate)
                 : Promise.resovle(canNavigate(...metaToStatementPair(meta)))
 
-              if (nextPromise instanceof Promise) {
-                return nextPromise;
-              }
-
-              if (options.strict) {
+              if (options.strict && !(nextPromise instanceof Promise)) {
                 throw new Error('$route.meta.can must return a promise in strict mode')
               }
-              return Boolean(nextPromise)
+
+              return nextPromise
             })
             .catch(error => false) // convert errors to false
         }, Promise.resolve(true))
-
-        /* getter to access fail route later */
-        chain.getFail = () => {
-          return fail
-        }
-
+        chain.getFail = () => fail
         return chain
       }
 
