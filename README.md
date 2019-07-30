@@ -1,6 +1,7 @@
 # vue-browser-acl 🔒
 
 [![Build status](http://img.shields.io/travis/mblarsen/browser-acl.svg)](http://travis-ci.org/mblarsen/vue-browser-acl)
+[![codebeat badge](https://codebeat.co/badges/8ca0a5dd-6e9f-4b88-8c01-43936e1972e7)](https://codebeat.co/projects/github-com-mblarsen-vue-browser-acl-master)
 [![Known vulnerabilities](https://snyk.io/test/github/mblarsen/vue-browser-acl/badge.svg)](https://snyk.io/test/github/mblarsen/vue-browser-acl)
 [![Monthly downloads](https://img.shields.io/npm/dm/vue-browser-acl.svg)](https://www.npmjs.com/package/vue-browser-acl)
 [![NPM version](http://img.shields.io/npm/v/vue-browser-acl.svg)](https://www.npmjs.com/package/vue-browser-acl)
