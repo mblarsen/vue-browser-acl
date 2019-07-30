@@ -9,3 +9,8 @@
   When a function for `meta.can` you must return a promise that returns `true`
   if the user *can*.
 
+0.11.0
+
+- new: add support for
+  [`readonly`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#readonly).
+  It is used the same way as `disable`.
