@@ -49,7 +49,9 @@ For more background on the "syntax design" read this short article: [Vue user pe
 <button v-can:sell.every="players">Sell team</button>
 ```
 
-Router and helper examples are available below.
+Router and helper examples are available below. **Also see the example folder
+for a blogging app that uses many of the plugins features: routing, vuex,
+etc.**
 
 ## Install
 
