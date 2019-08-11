@@ -1,6 +1,6 @@
 # CHANGELOG
 
-0.12.1
+0.12.2
 
 - bug: fixed bug introduced in 0.12.0 that caused non-function route statments to fail
 

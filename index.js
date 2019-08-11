@@ -21,6 +21,7 @@ import Acl, { GlobalRule } from 'browser-acl'
  * @param {Object}  [options.acl={}] Options passed to the Acl constructor
  * @param {Boolean} [options.assumeGlobal=true] If no subject is specified in route assume it is a global rule
  * @param {Boolean} [options.caseMode=true] When true lower case subjects will be looked up on the vue context
+ * @param {Boolean} [options.debug=false] Outputs errors and other useful information to the console
  * @param {Boolean} [options.directive='can'] Name of the directive, and helper function
  * @param {String}  [options.failRoute='/'] Set a default fail route
  * @param {Boolean} [options.helper=true] Adds helper function
@@ -39,11 +40,11 @@ export default {
         acl: { strict },
         assumeGlobal: !strict,
         caseMode: true,
+        debug: false,
         directive: 'can',
         failRoute: '/',
         helper: true,
         strict: false,
-
       },
       options
     )
@@ -92,7 +93,7 @@ export default {
 
               const nextPromise = typeof meta.can === 'function'
                 ? meta.can(to, from, canNavigate)
-                : Promise.resovle(canNavigate(...metaToStatementPair(meta)))
+                : Promise.resolve(canNavigate(...metaToStatementPair(meta)))
 
               if (options.strict && !(nextPromise instanceof Promise)) {
                 throw new Error('$route.meta.can must return a promise in strict mode')
@@ -100,7 +101,13 @@ export default {
 
               return nextPromise
             })
-            .catch(error => false) // convert errors to false
+            // convert errors to false
+            .catch(error => {
+              if (options.debug) {
+                console.error(error)
+              }
+              return false
+            })
         }, Promise.resolve(true))
         chain.getFail = () => fail
         return chain
