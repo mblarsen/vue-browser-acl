@@ -1,5 +1,9 @@
 # CHANGELOG
 
+0.12.1
+
+- bug: fixed bug introduced in 0.12.0 that caused non-function route statments to fail
+
 0.12.0
 
 - new: parent routes are now respected and their tests are run before the
