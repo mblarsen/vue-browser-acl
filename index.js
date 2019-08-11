@@ -19,12 +19,12 @@ import Acl, { GlobalRule } from 'browser-acl'
  * @param {Function|Object} setupCallback A configured Acl instance or a callback callback that adds rules and policies.
  * @param {Object}   options={}
  * @param {Object}  [options.acl={}] Options passed to the Acl constructor
+ * @param {Boolean} [options.assumeGlobal=true] If no subject is specified in route assume it is a global rule
  * @param {Boolean} [options.caseMode=true] When true lower case subjects will be looked up on the vue context
  * @param {Boolean} [options.directive='can'] Name of the directive, and helper function
+ * @param {String}  [options.failRoute='/'] Set a default fail route
  * @param {Boolean} [options.helper=true] Adds helper function
  * @param {Boolean} [options.strict=false] Causes redirect to fail route if route permissions are absent
- * @param {String|Object} [options.failRoute='/'] Set a default fail route
- * @param {Boolean} [options.assumeGlobal=true] If no subject is specified in route assume it is a global rule
  * @param {?Object}  options.router Vue router
  */
 export default {
@@ -37,12 +37,13 @@ export default {
     options = Object.assign(
       {
         acl: { strict },
-        caseMode: true,
-        helper: true,
-        directive: 'can',
-        strict: false,
-        failRoute: '/',
         assumeGlobal: !strict,
+        caseMode: true,
+        directive: 'can',
+        failRoute: '/',
+        helper: true,
+        strict: false,
+
       },
       options
     )
