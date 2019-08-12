@@ -5,3 +5,4 @@ yarn-error.log*
 .dat
 tags
 dist/docs.md
+package-lock.json

@@ -16,24 +16,36 @@
   },
   "bugs": "https://github.com/mblarsen/vue-browser-acl/issues",
   "license": "MIT",
-  "main": "dist/vue-browser-acl.js",
+  "main": "dist/vue-browser-acl.common.js",
+  "module": "dist/vue-browser-acl.esm.js",
+  "browser": "dist/vue-browser-acl.umd.js",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "poi build",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w",
     "version": "npm run build && git add -A dist",
     "postversion": "git push && git push --tags",
     "build:docs": "documentation build index.js -f md -o dist/docs.md"
   },
   "dependencies": {
-    "browser-acl": "^0.7.0"
+    "browser-acl": "^0.7.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "documentation": "^6.1.0",
-    "poi": "^9.6.13",
-    "vue": "2.5.16",
-    "vue-template-compiler": "2.5.16"
+    "rollup": "^1.19.4",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.1.1",
+    "rollup-plugin-vue": "^5.0.1",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10"
   },
   "thanks": "https://flattr.com/@mblarsen"
 }
