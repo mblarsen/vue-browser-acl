@@ -27,7 +27,7 @@ export default [
     input: './index.js',
     output: {
       file: pkg.browser,
-      format: 'iife',
+      format: 'umd',
       sourcemap: true,
       name: 'VueBrowserAcl',
       exports: 'named'

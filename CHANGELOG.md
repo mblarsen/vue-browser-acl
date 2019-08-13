@@ -2,7 +2,8 @@
 
 0.12.3
 
-- chore: replace poi with rollup
+- chore: replace poi with rollup (closes #21)
+- feat: add tests with jest (closes #14)
 
 0.12.2
 

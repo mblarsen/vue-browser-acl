@@ -1,5 +1,5 @@
 language: node_js
 sudo: false
 node_js:
-  - 9
+  - stable
 script: travis_retry npm run build
