@@ -1,5 +1,5 @@
 language: node_js
-sudo: false
+script: travis_retry npm test
 node_js:
   - stable
-script: travis_retry npm run build
+sudo: false
