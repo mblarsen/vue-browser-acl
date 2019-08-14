@@ -1,6 +1,0 @@
-.git
-node_modules/
-coverage/
-example/vuex/node_modules/
-yarn-error.log*
-tags
