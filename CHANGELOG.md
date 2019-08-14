@@ -1,5 +1,14 @@
 # CHANGELOG
 
+0.13.0
+
+- bugfix: when the value was an array it would be treated as the array syntax.
+  With this version the array syntax is only used in case the expression
+  actually uses the '[ ]' syntax. In contrast 'posts' would be treated as a
+  value. *This fix is backward incompatible* and if you have stored you
+  expressions as variables you'll have to actually stick them in the template.
+  Which I would recommend anyway, howelse can you see what is going on.
+
 0.12.3
 
 - chore: replace poi with rollup (closes #21)

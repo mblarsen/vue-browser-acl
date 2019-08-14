@@ -142,7 +142,7 @@ export default {
 
       let verb, verbArg, subject, params
       verbArg = binding.arg
-      if (Array.isArray(binding.value)) {
+      if (Array.isArray(binding.value) && binding.expression.startsWith('[')) {
         [verb, subject, params] = binding.modifiers.global
           ? arrayToGlobalExprTpl(binding)
           : arrayToExprTpl(binding)
