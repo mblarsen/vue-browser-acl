@@ -1,5 +1,10 @@
 # CHANGELOG
 
+0.13.1
+
+- internals on how the setupCallback is detected
+- changes to build setup
+
 0.13.0
 
 - bugfix: when the value was an array it would be treated as the array syntax.
