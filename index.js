@@ -51,7 +51,7 @@ export default {
 
     /* setup acl */
     let acl = setupCallback
-    if (!(setupCallback instanceof Acl)) {
+    if (typeof setupCallback === 'function') {
       acl = new Acl(options.acl)
       setupCallback(acl)
     }
