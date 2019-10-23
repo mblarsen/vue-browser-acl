@@ -1,5 +1,9 @@
 # CHANGELOG
 
+0.13.2
+
+- fix: reset disable and readonly in case state changes (issue #24)
+
 0.13.1
 
 - internals on how the setupCallback is detected
