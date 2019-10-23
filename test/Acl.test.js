@@ -140,6 +140,41 @@ describe('Simple rules', () => {
     expect(wrapper.html()).toContain('Edit')
   })
 })
+describe('disable', () => {
+  test('Is there but disabled', () => {
+    const localVue = createLocalVue()
+    setUser({id: 42})
+    localVue.use(VueAcl, getUser, (acl) => {
+      acl.rule('edit', Post, (user, post) => user.id === post.owner)
+    })
+
+    const Component = {
+      props: ['post'],
+      template: `
+      <div> <button id="edit" v-can:edit.disable="post">Edit</button> </div>
+      `,
+    }
+
+    const wrapper = shallowMount(
+      Component,
+      {
+        localVue,
+        propsData: { post: new Post({owner: 43})}
+      }
+    )
+    expect(wrapper.find('#edit').attributes('disabled')).toBe("")
+
+    setUser({id: 43})
+    const wrapper2 = shallowMount(
+      Component,
+      {
+        localVue,
+        propsData: { post: new Post({owner: 43})}
+      }
+    )
+    expect(wrapper2.find('#edit').attributes('disabled')).toBe(undefined)
+  })
+})
 describe('Policies', () => {
   test('Object policy', () => {
     const localVue = createLocalVue()

@@ -177,6 +177,8 @@ export default {
       const ok = acl[aclMethod](userAccessor(), verb, subject, ...params)
       const not = binding.modifiers.not
 
+      el.disabled = false
+      el.readOnly = false
       if ((ok && not) || (!ok && !not)) {
         if (behaviour === 'hide') {
           commentNode(el, vnode)
