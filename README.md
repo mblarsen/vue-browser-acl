@@ -71,13 +71,7 @@ See `examples` for more detailed examples: routing, vuex, etc.
 ## Install
 
 ```javascript
-npm install vue-browser-acl
-```
-
-or
-
-```javascript
-yarn add vue-browser-acl
+npm i vue-browser-acl
 ```
 
 ## Setup
