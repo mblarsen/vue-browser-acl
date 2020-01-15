@@ -9,7 +9,9 @@
 
 > Easy user access control in Vue for better UX. Build on top of the [browser-acl](https://github.com/mblarsen/browser-acl) package.
 
-* Easily manage permissions with [browser-acl](https://github.com/mblarsen/browser-acl) using rules and/or policies
+* Easily manage permissions with
+  [browser-acl](https://github.com/mblarsen/browser-acl) using rules and/or
+  policies (rules using classes)
 * Adds `v-can` directive with simple syntax: 
   - `v-can:edit="post"` an instance on the component
   - `v-can:create="'Post'"` (the type)
@@ -23,35 +25,48 @@ For more background on the "syntax design" read this short article: [Vue user pe
 
 ## Examples
 
+Similar to v-if removes button if user does not have permission to transfer repo.
+
 ```vue
-<!-- Similar to v-if removes button if user does not have permission to transfer repo -->
 <button v-can:transfer="repo">Transfer</button>
+```
 
-<!-- Can be used without a subject -->
+You don't need a subject (see [global rules](#global-rules)).
+
+```vue
 <button v-can:review>Review</button>
+```
 
-<!-- Disables button if user does not have permission to transfer repo -->
+Disables button if user does not have permission to transfer repo, or make it
+read-only if user cannot edit a post.
+
+```vue
 <button v-can:transfer.disable="repo">Transfer</button>
-<!-- ...or makes input read only if user cannot edit a post -->
 <input v-can:edit.readonly="post" type="text" name="title"/>
+```
 
-<!-- String syntax, repo instance in context, Repo is the class -->
-<button v-can="'transfer repo'">Transfer</button>
-<button v-can="'create Repo'">Transfer</button>
+It works on collections, e.g. the table is shown is the user can edit at least
+some of the items.
 
-<!-- Send additional arguments (array flavor)-->
-<button v-can="['transfer', repo, otherArgs]">Transfer</button>
-
-<!-- Only show if user can edit at least one of the players -->
+```vue
 <table v-can:edit.some="players">
+```
 
-<!-- Only show if the user can sell all players -->
+Or all of them.
+
+```vue
 <button v-can:sell.every="players">Sell team</button>
 ```
 
-Router and helper examples are available below. **Also see the example folder
-for a blogging app that uses many of the plugins features: routing, vuex,
-etc.**
+Additionally you can use the string and array syntax.
+
+```vue
+<button v-can="'transfer repo'">Transfer repo instance</button>
+<button v-can="'create Repo'">Transfer based on class</button>
+<button v-can="['transfer', repo, otherArgs]">Transfer with extra argument</button>
+```
+
+See `examples` for more detailed examples: routing, vuex, etc.
 
 ## Install
 
@@ -73,6 +88,7 @@ import Acl from 'vue-browser-acl'
 
 // example user from backend, you can provide a function
 // instead in case the user retrieved asynchronously
+// const user = () => store.auth.user
 const user = window.__INITIAL_STATE__.user
 
 Vue.use(Acl, user, (acl) => {
@@ -91,7 +107,8 @@ a [preconfigured acl](https://github.com/mblarsen/browser-acl#setup) from
 the `browser-acl` package. This may be the better choice depending on your
 source bundling approach.
 
-See [browser-acl setup](https://github.com/mblarsen/browser-acl) for how to define rules and policies.
+See [browser-acl setup](https://github.com/mblarsen/browser-acl) for how to
+define rules and policies (rules using classes).
 
 As an optional third parameter you can pass an [options](#options) object.
 
