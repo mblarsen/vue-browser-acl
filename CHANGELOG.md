@@ -1,5 +1,9 @@
 # CHANGELOG
 
+0.13.3
+
+- feat: add 'role' as synonym for 'can' in route.meta
+
 0.13.2
 
 - fix: reset disable and readonly in case state changes (issue #24)
