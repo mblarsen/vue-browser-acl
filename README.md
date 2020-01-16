@@ -9,23 +9,25 @@
 
 > Easy user access control in Vue for better UX. Build on top of the [browser-acl](https://github.com/mblarsen/browser-acl) package.
 
-* Easily manage permissions with
+- Easily manage permissions with
   [browser-acl](https://github.com/mblarsen/browser-acl) using rules and/or
   policies (rules using classes)
-* Adds `v-can` directive with simple syntax: 
+- Adds `v-can` directive with simple syntax: 
   - `v-can:edit="post"` an instance on the component
   - `v-can:create="'Post'"` (the type)
-* Optionally adds `$can` and `$can.not` helper functions
-* Can **hide** `v-can` or to just **disable** `v-can.disable` a section, tab, or button
-* Works collections of objects `v-can.some` or `v-can.every`
-* Works with **vue-router** to guard routes
-* Works with **vuex** and plain objects
+- Optionally adds `$can` and `$can.not` helper functions
+- Can **hide** `v-can` or to just **disable** `v-can.disable` a section, tab,
+  or button
+- Works collections of objects `v-can.some` or `v-can.every`
+- Works with **vue-router** to guard routes
+- Works with **vuex** and plain objects
 
 For more background on the "syntax design" read this short article: [Vue user permissions through directives](https://codeburst.io/reusable-vue-directives-v-can-753bf54e563f).
 
 ## Examples
 
-Similar to v-if removes button if user does not have permission to transfer repo.
+Similar to v-if removes button if user does not have permission to transfer
+repo.
 
 ```vue
 <button v-can:transfer="repo">Transfer</button>
@@ -96,10 +98,11 @@ You can pass in an actual user or a function that returns the users. This is
 useful if you don't have the user available right away if for instance it is
 fetched asynchronously.
 
-The second param is a callback that let's you define the rules. Alternatively you can pass
-a [preconfigured acl](https://github.com/mblarsen/browser-acl#setup) from
-the `browser-acl` package. This may be the better choice depending on your
-source bundling approach.
+The second param is a callback that let's you define the rules. Alternatively
+you can pass a [preconfigured
+acl](https://github.com/mblarsen/browser-acl#setup) from the `browser-acl`
+package. This may be the better choice depending on your source bundling
+approach.
 
 See [browser-acl setup](https://github.com/mblarsen/browser-acl) for how to
 define rules and policies (rules using classes).
@@ -135,15 +138,17 @@ See the details in browser-acl [Subject mapper section](https://github.com/mblar
 
 You can use the module as directive, with vue-router, and as a helper function.
 
-The `v-can` directive can be used in three different flavors and you can apply one or more modifiers
-that alters the behavior of the directive.
+The `v-can` directive can be used in three different flavors and you can apply
+one or more modifiers that alters the behavior of the directive.
 
-There are three different flavors, that to some degree can be mixed: array, string, and argument. For
-most cases the _argument flavor_ would be the preferred syntax.
+There are three different flavors, that to some degree can be mixed: array,
+string, and argument. For most cases the _argument flavor_ would be the
+preferred syntax.
 
 ### Array flavor
 
-Verb, subject and optional parameters are passed as an array as the value for the directive.
+Verb, subject and optional parameters are passed as an array as the value for
+the directive.
 
 ```vue
 <button v-can="['create', 'Post']">New</button>
@@ -157,7 +162,8 @@ All arguments from the third and onwards will be passed to the ACL for evaluatio
 Pros:
 
 - Let's you pass additional arguments
-- The vue compiler throws errors if you use something that doesn't exist on the component
+- The vue compiler throws errors if you use something that doesn't exist on the
+  component
 
 Cons:
 
@@ -255,10 +261,11 @@ you are not allowed to use.
 
 #### `readonly` modifier
 
-The read only modifier applies the `readonly` attribute to the tag, e.g. to make an input read only 
-if you don't have permission to edit.
+The read only modifier applies the `readonly` attribute to the tag, e.g. to
+make an input read only if you don't have permission to edit.
 
-Note: The `readonly` attribute doesn't work on all inputs. Checkboxes for instance doesn't support it.
+Note: The `readonly` attribute doesn't work on all inputs. Checkboxes for
+instance doesn't support it.
 
 #### `not` modifier
 
@@ -271,8 +278,8 @@ element is shown.
 
 #### `some` and `every` modifiers
 
-The `some` and `every` arguments takes multiple subjects and will apply the same verb to all of
-them.
+The `some` and `every` arguments takes multiple subjects and will apply the
+same verb to all of them.
 
 ```vue
 <table v-can.some="['edit', players]">
@@ -280,11 +287,13 @@ them.
 <button v-can:delete.some="[project, sprintBoard]">Delete</button>
 ```
 
-Note that the subjects do not need to be the some kind. In the third example above the delete
-button becomes visible if you either have delete permission on the project (think project owner)
-or you have it on the sprint board itself (a user with less permissions).
+Note that the subjects do not need to be the some kind. In the third example
+above the delete button becomes visible if you either have delete permission on
+the project (think project owner) or you have it on the sprint board itself (a
+user with less permissions).
 
-See [browser-acl](https://github.com/mblarsen/browser-acl) for more info on how to use them.
+See [browser-acl](https://github.com/mblarsen/browser-acl) for more info on how
+to use them.
 
 #### `global` modifier
 
@@ -319,12 +328,13 @@ if (this.$can('edit', post)) {
 
 You can negate `$can` with `$can.not`.
 
-If you don't want to install the helper function pass `helper: false` in the options.
+If you don't want to install the helper function pass `helper: false` in the
+options.
 
 ### vue-router
 
-There are two ways to hook up the vue-router. Either during setup of the Acl or later calling the router
-init funtion.
+There are two ways to hook up the vue-router. Either during setup of the Acl or
+later calling the router init funtion.
 
 <details>
   <summary>Option 1: setup</summary>
@@ -344,8 +354,8 @@ acl.router(router)
 ```
 </details>
 
-You configure routes by adding `can` meta property to the route. E.g. if a router
-requires create permissions for "Post":
+You configure routes by adding `can` meta property to the route. E.g. if a
+router requires create permissions for "Post":
 
 ```javascript
 {
