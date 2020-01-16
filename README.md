@@ -70,7 +70,7 @@ See `examples` for more detailed examples: routing, vuex, etc.
 
 ## Install
 
-```javascript
+```
 npm i vue-browser-acl
 ```
 
@@ -359,10 +359,15 @@ requires create permissions for "Post":
 }
 ```
 
-Limitation: Unlike with the directive and the helper you will not have access to class instances. E.g you
-cannot use a `can: 'delete post'` as this assumes you have a Post instance already.
+Limitation: Unlike with the directive and the helper you will not have access
+to class instances. E.g you cannot use a `can: 'delete post'` as this assumes
+you have a Post instance already.
 
-Optionally you have the option to specify a callback:
+`role` is a synonym for `can`. So if you have rules that are more role-like you
+can use this instead. E.g. `role: 'admin'`.
+
+Async evaluation is possible providing a callback that returns a promise like
+this:
 
 ```javascript
 {

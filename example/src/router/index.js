@@ -18,7 +18,7 @@ export default new Router({
       name: 'admin',
       component: () => import('@pages/Admin'),
       meta: {
-        can: 'admin',
+        role: 'admin',
         fail: '/',
       },
     }, {

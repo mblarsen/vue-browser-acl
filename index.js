@@ -65,12 +65,15 @@ export default {
           (!subject && !options.strict)
       }
 
+      /* check for both can and role */
+      const getCan = meta => meta.can || meta.role
+
       /* convert 'edit Post' to ['edit', 'Post'] */
       const metaToStatementPair = meta => {
         const [
           verb = null,
           subject = options.assumeGlobal ? GlobalRule : null
-        ] = (meta.can || '').split(' ')
+        ] = (getCan(meta) || '').split(' ')
         return [verb, subject]
       }
 
@@ -91,8 +94,10 @@ export default {
 
               fail = meta.fail
 
-              const nextPromise = typeof meta.can === 'function'
-                ? meta.can(to, from, canNavigate)
+              const can = getCan(meta)
+
+              const nextPromise = typeof can === 'function'
+                ? can(to, from, canNavigate)
                 : Promise.resolve(canNavigate(...metaToStatementPair(meta)))
 
               if (options.strict && !(nextPromise instanceof Promise)) {
@@ -115,7 +120,7 @@ export default {
 
       router.beforeEach((to, from, next) => {
         const metas = to.matched
-          .filter(route => route.meta && route.meta.can)
+          .filter(route => route.meta && getCan(route.meta))
           .map(route => route.meta)
 
         const chain = chainCans(metas, to, from)
