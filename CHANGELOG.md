@@ -1,5 +1,10 @@
 # CHANGELOG
 
+0.13.4
+
+- feat: `options.aliases` is an array of aliases for 'can'. This replaces the
+  new feature of 13.3 and adds a directive for each alias as well.
+
 0.13.3
 
 - feat: add 'role' as synonym for 'can' in route.meta
