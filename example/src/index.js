@@ -1,6 +1,6 @@
-import Vue from 'vue';
-import App from '@components/App';
-import router from './router';
+import Vue from 'vue'
+import App from '@components/App'
+import router from './router'
 import Acl from 'vue-browser-acl'
 import store from './store/index.js'
 import Post from './models/Post.js'
@@ -47,19 +47,27 @@ class PostPolicy {
 
 // Setup user rules. The `acl` is an acl instance (of browser-acl)
 // that the plugin provides you for registering rules and policies
-Vue.use(Acl, user, (acl) => {
-  // Only admin users can do admin-stuff
-  acl.rule('admin', (user) => user && user.type === 'admin')
-  acl.rule('super', (user) => user && user.type === 'admin' && user.name === 'super')
-  acl.policy(PostPolicy, Post)
-  // these rules are the equivalent of the PostPolicy, it should
-  // be obvious how policies simplifies the logic:
-  // acl.rule('create', Post, (user) => user && user.type !== 'guest')
-  // acl.rule('edit', Post, (user, post) => user && (user.type === 'admin' || user.name === post.user))
-  // acl.rule('delete', Post, (user, post) => user && (user.type === 'admin' || user.name === post.user))
-}, {router})
+Vue.use(
+  Acl,
+  user,
+  acl => {
+    // Only admin users can do admin-stuff
+    acl.rule('admin', user => user && user.type === 'admin')
+    acl.rule(
+      'super',
+      user => user && user.type === 'admin' && user.name === 'super',
+    )
+    acl.policy(PostPolicy, Post)
+    // these rules are the equivalent of the PostPolicy, it should
+    // be obvious how policies simplifies the logic:
+    // acl.rule('create', Post, (user) => user && user.type !== 'guest')
+    // acl.rule('edit', Post, (user, post) => user && (user.type === 'admin' || user.name === post.user))
+    // acl.rule('delete', Post, (user, post) => user && (user.type === 'admin' || user.name === post.user))
+  },
+  { router },
+)
 
-Vue.config.productionTip = false;
-const render = h => h(App);
+Vue.config.productionTip = false
+const render = h => h(App)
 
-new Vue({ router, render, store }).$mount('#app', true);
+new Vue({ router, render, store }).$mount('#app', true)

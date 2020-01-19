@@ -29,7 +29,7 @@ import Acl, { GlobalRule } from 'browser-acl'
  * @param {?Object}  options.router Vue router
  */
 export default {
-  install: function (Vue, user, setupCallback, options = {}) {
+  install: function(Vue, user, setupCallback, options = {}) {
     /* ensure userAccessor is function */
     const userAccessor = typeof user === 'function' ? user : () => user
 
@@ -47,7 +47,7 @@ export default {
         helper: true,
         strict: false,
       },
-      options
+      options,
     )
 
     const findCan = findCanWithOptions(options)
@@ -60,19 +60,21 @@ export default {
     }
 
     /* router init function */
-    acl.router = function (router) {
+    acl.router = function(router) {
       options.router = router
 
       const canNavigate = (verb, subject, ...otherArgs) => {
-        return (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) ||
+        return (
+          (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) ||
           (!subject && !options.strict)
+        )
       }
 
       /* convert 'edit Post' to ['edit', 'Post'] */
       const metaToStatementPair = meta => {
         const [
           verb = null,
-          subject = options.assumeGlobal ? GlobalRule : null
+          subject = options.assumeGlobal ? GlobalRule : null,
         ] = (findCan(meta) || '').split(' ')
         return [verb, subject]
       }
@@ -86,33 +88,38 @@ export default {
       const chainCans = (metas, to, from) => {
         let fail = null
         const chain = metas.reduce((chain, meta) => {
-          return chain
-            .then(result => {
-              if (result !== true) {
-                return result
-              }
+          return (
+            chain
+              .then(result => {
+                if (result !== true) {
+                  return result
+                }
 
-              fail = meta.fail
+                fail = meta.fail
 
-              const can = findCan(meta)
+                const can = findCan(meta)
 
-              const nextPromise = typeof can === 'function'
-                ? can(to, from, canNavigate)
-                : Promise.resolve(canNavigate(...metaToStatementPair(meta)))
+                const nextPromise =
+                  typeof can === 'function'
+                    ? can(to, from, canNavigate)
+                    : Promise.resolve(canNavigate(...metaToStatementPair(meta)))
 
-              if (options.strict && !(nextPromise instanceof Promise)) {
-                throw new Error('$route.meta.can must return a promise in strict mode')
-              }
+                if (options.strict && !(nextPromise instanceof Promise)) {
+                  throw new Error(
+                    '$route.meta.can must return a promise in strict mode',
+                  )
+                }
 
-              return nextPromise
-            })
-            // convert errors to false
-            .catch(error => {
-              if (options.debug) {
-                console.error(error)
-              }
-              return false
-            })
+                return nextPromise
+              })
+              // convert errors to false
+              .catch(error => {
+                if (options.debug) {
+                  console.error(error)
+                }
+                return false
+              })
+          )
         }, Promise.resolve(true))
         chain.getFail = () => fail
         return chain
@@ -128,9 +135,7 @@ export default {
           if (result === true) {
             return next()
           }
-          const fail = chain.getFail() === '$from'
-            ? from.path
-            : chain.getFail()
+          const fail = chain.getFail() === '$from' ? from.path : chain.getFail()
           next(fail || options.failRoute)
         })
       })
@@ -148,16 +153,20 @@ export default {
       let verb, verbArg, subject, params
       verbArg = binding.arg
       if (Array.isArray(binding.value) && binding.expression.startsWith('[')) {
-        [verb, subject, params] = binding.modifiers.global
+        ;[verb, subject, params] = binding.modifiers.global
           ? arrayToGlobalExprTpl(binding)
           : arrayToExprTpl(binding)
       } else if (typeof binding.value === 'string') {
-        [verb, subject, params] = stringToExprTpl(binding, vnode, options)
+        ;[verb, subject, params] = stringToExprTpl(binding, vnode, options)
       } else if (verbArg && typeof binding.value === 'object') {
         verb = verbArg
         subject = binding.value
         params = []
-      } else if (binding.value === undefined && !binding.modifiers.global && options.assumeGlobal) {
+      } else if (
+        binding.value === undefined &&
+        !binding.modifiers.global &&
+        options.assumeGlobal
+      ) {
         // Fall back to global if no value is provided
         verb = verbArg
         subject = GlobalRule
@@ -197,28 +206,25 @@ export default {
 
     /* set up directive for 'can' and aliases */
     const directiveNames = [options.directive, ...options.aliases]
-    directiveNames.forEach((name) => Vue.directive(
-      name,
-      directiveHandler
-    ))
+    directiveNames.forEach(name => Vue.directive(name, directiveHandler))
 
     /* define helpers */
     if (options.helper) {
       const helper = `$${options.directive}`
-      Vue.prototype[helper] = function () {
+      Vue.prototype[helper] = function() {
         return acl.can(userAccessor(), ...arguments)
       }
-      Vue.prototype[helper].not = function () {
+      Vue.prototype[helper].not = function() {
         return !acl.can(userAccessor(), ...arguments)
       }
-      Vue.prototype[helper].every = function () {
+      Vue.prototype[helper].every = function() {
         return acl.every(userAccessor(), ...arguments)
       }
-      Vue.prototype[helper].some = function () {
+      Vue.prototype[helper].some = function() {
         return acl.some(userAccessor(), ...arguments)
       }
     }
-  }
+  },
 }
 
 /**
@@ -231,7 +237,7 @@ function commentNode(el, vnode) {
   const comment = document.createComment(' ')
 
   Object.defineProperty(comment, 'setAttribute', {
-    value: () => undefined
+    value: () => undefined,
   })
 
   vnode.text = ' '
@@ -252,7 +258,7 @@ function commentNode(el, vnode) {
 /**
  * Return the first property from meta that is 'can' or one of its aliases.
  */
-const findCanWithOptions = (options) => (meta) => {
+const findCanWithOptions = options => meta => {
   return [options.directive, ...options.aliases]
     .map(key => meta[key])
     .filter(i => i)
@@ -262,29 +268,31 @@ const findCanWithOptions = (options) => (meta) => {
 /**
  * Maps binding.value of type array to expression tuple
  */
-const arrayToExprTpl = ({arg, value}) => ([
+const arrayToExprTpl = ({ arg, value }) => [
   arg || value[0],
   arg ? value[0] : value[1],
-  arg ? value.slice(1) : value.slice(2)
-])
+  arg ? value.slice(1) : value.slice(2),
+]
 
 /**
  * Maps binding.value of type array to global expression tuple
  */
-const arrayToGlobalExprTpl = ({arg, value}) => ([
+const arrayToGlobalExprTpl = ({ arg, value }) => [
   arg || value[0],
   GlobalRule,
-  arg ? value : value.slice(1)
-])
+  arg ? value : value.slice(1),
+]
 
 /**
  * Maps binding.value of type string to expression tuple
  */
-const stringToExprTpl = ({arg, value, modifiers}, vnode, options) => {
+const stringToExprTpl = ({ arg, value, modifiers }, vnode, options) => {
   let [verb, subject] = arg ? [arg, value] : value.split(' ')
 
   if (subject && modifiers.global) {
-    throw new Error('You cannot provide subject and use global modifier at the same time')
+    throw new Error(
+      'You cannot provide subject and use global modifier at the same time',
+    )
   }
 
   if (

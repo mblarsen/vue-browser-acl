@@ -1,19 +1,20 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import Vue from 'vue'
+import Router from 'vue-router'
 import Posts from '../api/Posts.js'
 import debug from 'debug'
 
 const log = debug('demo:router')
 
-Vue.use(Router);
+Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   routes: [
     {
       path: '/',
-      component: () => import('@pages/Home')
-    }, {
+      component: () => import('@pages/Home'),
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: () => import('@pages/Admin'),
@@ -21,7 +22,8 @@ export default new Router({
         role: 'admin',
         fail: '/',
       },
-    }, {
+    },
+    {
       path: '/post/:id',
       props: true,
       name: 'post',
@@ -30,19 +32,18 @@ export default new Router({
         can: (to, from, can) => {
           log(`fetching post ${to.params.id}`)
           // It is important here that you return a promise
-          return Posts.find(to.params.id)
-            .then((post) => {
-              log(`post fetched`)
-              // Whatever you return in the promise only values
-              // that is strictly true will let you continue
-              const verdict = can('edit', post)
-              log(`verdict ${verdict}`)
-              return verdict
-            })
+          return Posts.find(to.params.id).then(post => {
+            log(`post fetched`)
+            // Whatever you return in the promise only values
+            // that is strictly true will let you continue
+            const verdict = can('edit', post)
+            log(`verdict ${verdict}`)
+            return verdict
+          })
         },
         // Where to navigate to in case 'can' fails
-        fail: '/'
-      }
-    }
-  ]
-});
+        fail: '/',
+      },
+    },
+  ],
+})

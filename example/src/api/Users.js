@@ -1,5 +1,5 @@
 import User from '../models/User.js'
-import {faultyFetch} from './utils.js'
+import { faultyFetch } from './utils.js'
 import debug from 'debug'
 
 const log = debug('demo:api:user')
@@ -14,13 +14,12 @@ export default class Users {
     return null
   }
   static auth(user) {
-    return faultyFetch('user', user)
-      .then(user => {
-        if (user) {
-          window.sessionStorage.setItem('user', JSON.stringify(user))
-        }
-        return user
-      })
+    return faultyFetch('user', user).then(user => {
+      if (user) {
+        window.sessionStorage.setItem('user', JSON.stringify(user))
+      }
+      return user
+    })
   }
   static create(props) {
     const user = new User(props)
@@ -37,7 +36,7 @@ export default class Users {
       log('get user from session')
       return Promise.resolve(user)
     }
-    return Promise.resolve(User.create({type: 'guest'}))
+    return Promise.resolve(User.create({ type: 'guest' }))
   }
 }
 

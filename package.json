@@ -51,5 +51,10 @@
     "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10"
   },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
   "thanks": "https://flattr.com/@mblarsen"
 }

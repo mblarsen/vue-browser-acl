@@ -1,7 +1,7 @@
 <template id="">
   <div>
     <div v-if="post">
-      <PostView :post="post" :seeMore="false"/>
+      <PostView :post="post" :seeMore="false" />
     </div>
   </div>
 </template>
@@ -10,10 +10,10 @@ import Posts from '../api/Posts.js'
 import PostView from '../components/Post.vue'
 export default {
   props: {
-    id: {type: [String, Number], required: true}
+    id: { type: [String, Number], required: true },
   },
   components: {
-    PostView
+    PostView,
   },
   data() {
     return {

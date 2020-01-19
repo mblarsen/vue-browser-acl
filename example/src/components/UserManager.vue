@@ -1,14 +1,20 @@
 <template id="">
   <div :class="$style.container">
     <div v-if="authenticated">
-      Hi, {{user.name}} ({{user.type}})
+      Hi, {{ user.name }} ({{ user.type }})
       <button @click.prevent="logout">Log out</button>
     </div>
     <div v-else-if="authenticating">
       Wait...
     </div>
     <div v-else>
-      <input type="text" name="username" v-model="username" placeholder="Username" required>
+      <input
+        type="text"
+        name="username"
+        v-model="username"
+        placeholder="Username"
+        required
+      />
       <select v-model="userType">
         <option value="group1">Group 1</option>
         <option value="group2">Group 2</option>
@@ -16,11 +22,11 @@
       </select>
       <button @click.prevent="authenticate">Log in</button>
     </div>
-    <div v-if="error" :class="$style.error">{{error}}</div>
+    <div v-if="error" :class="$style.error">{{ error }}</div>
   </div>
 </template>
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -41,18 +47,16 @@ export default {
         name: this.username,
         type: this.userType,
       }
-    }
+    },
   },
   methods: {
-    ...mapActions('user', [
-      'logout',
-    ]),
+    ...mapActions('user', ['logout']),
     authenticate() {
       if (this.username.trim()) {
-        this.$store.dispatch('user/authenticate', {...this.formUser})
+        this.$store.dispatch('user/authenticate', { ...this.formUser })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style module lang="css">

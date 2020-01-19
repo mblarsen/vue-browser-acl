@@ -15,36 +15,42 @@ const state = {
 
 const getters = {
   authenticated: state => state.user && state.user.type !== 'guest',
-  user: state =>  state.user,
+  user: state => state.user,
   error: state => state.error,
   authenticating: state => state.authenticating,
   loggingOut: state => state.loggingOut,
 }
 
 const actions = {
-  init({commit}) {
+  init({ commit }) {
     commit('setAuthenticating')
-    reauthenticate().then(user => {
-      commit('setUser', user)
-    }).catch(error => {
-      commit('setError', error.message)
-    })
+    reauthenticate()
+      .then(user => {
+        commit('setUser', user)
+      })
+      .catch(error => {
+        commit('setError', error.message)
+      })
   },
-  authenticate({commit}, user) {
+  authenticate({ commit }, user) {
     commit('setAuthenticating')
-    authUser(user).then(user => {
-      commit('setUser', user)
-    }).catch(error => {
-      commit('setError', error.message)
-    })
+    authUser(user)
+      .then(user => {
+        commit('setUser', user)
+      })
+      .catch(error => {
+        commit('setError', error.message)
+      })
   },
-  logout({commit}) {
+  logout({ commit }) {
     commit('setLoggingOut')
-    logout().then(() => {
-      commit('setLoggedOut')
-    }).catch(error => {
-      commit('setError', error.message)
-    })
+    logout()
+      .then(() => {
+        commit('setLoggedOut')
+      })
+      .catch(error => {
+        commit('setError', error.message)
+      })
   },
 }
 
@@ -60,7 +66,7 @@ const mutations = {
     state.authenticating = false
   },
   setLoggedOut(state) {
-    state.user = {type: 'guest'}
+    state.user = { type: 'guest' }
     state.error = null
     state.loggingOut = false
   },

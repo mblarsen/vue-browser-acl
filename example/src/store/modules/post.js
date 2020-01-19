@@ -1,9 +1,4 @@
-import {
-  allPosts,
-  createPost,
-  deletePost,
-  findPost,
-} from '../../api/Posts.js'
+import { allPosts, createPost, deletePost, findPost } from '../../api/Posts.js'
 
 const state = {
   posts: [],
@@ -18,29 +13,35 @@ const getters = {
 }
 
 const actions = {
-  fetch({commit}, page = 1) {
+  fetch({ commit }, page = 1) {
     commit('setBusy')
-    allPosts(page).then(posts => {
-      commit('setPosts', posts)
-    }).catch(error => {
-      commit('setError', error.message)
-    })
+    allPosts(page)
+      .then(posts => {
+        commit('setPosts', posts)
+      })
+      .catch(error => {
+        commit('setError', error.message)
+      })
   },
-  create({commit}, post) {
+  create({ commit }, post) {
     console.log('creating post', post)
-    createPost(post).then((post) => {
-      commit('addPost', post)
-    }).catch((error) => {
-      commit('setError', error.message)
-    })
+    createPost(post)
+      .then(post => {
+        commit('addPost', post)
+      })
+      .catch(error => {
+        commit('setError', error.message)
+      })
   },
-  delete({commit}, post) {
-    deletePost(post.id).then(() => {
-      commit('removePost', post)
-    }).catch((error) => {
-      commit('setError', error.message)
-    })
-  }
+  delete({ commit }, post) {
+    deletePost(post.id)
+      .then(() => {
+        commit('removePost', post)
+      })
+      .catch(error => {
+        commit('setError', error.message)
+      })
+  },
 }
 
 const mutations = {
@@ -54,7 +55,7 @@ const mutations = {
     state.busy = false
   },
   addPost(state, post) {
-    state.posts = {post, ...state.posts}
+    state.posts = { post, ...state.posts }
   },
   removePost(state, post) {
     state.posts = state.posts.filter(p => p.id !== post.id)

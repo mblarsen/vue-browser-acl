@@ -23,24 +23,23 @@ export default class Posts {
     return post
   }
   static async create(props) {
-    const response = await fetch(
-      'https://crudpi.io/7b2f97/post',
-      {
-        method: 'POST',
-        mode: 'cors',
-        body: JSON.stringify(props),
-        headers: {
-            'Content-Type': 'application/json',
-        },
-      }
-    )
+    const response = await fetch('https://crudpi.io/7b2f97/post', {
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify(props),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
     // This particular API returns all posts so
     // we pop the last one we just created
     const posts = await response.json()
     return Post.create(posts.pop())
   }
   static async delete(id) {
-    return await fetch( `https://crudpi.io/7b2f97/post/${id}`, { method: 'DELETE', })
+    return await fetch(`https://crudpi.io/7b2f97/post/${id}`, {
+      method: 'DELETE',
+    })
   }
 }
 
