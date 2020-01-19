@@ -1,5 +1,11 @@
 # CHANGELOG
 
+0.13.5
+
+- feat: fail and failRoute can be a function which allows you to do things like
+  redirect after login.
+- chore: format with prettier
+
 0.13.4
 
 - feat: `options.aliases` is an array of aliases for 'can'. This replaces the

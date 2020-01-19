@@ -34,7 +34,7 @@ const actions = {
   },
   authenticate({ commit }, user) {
     commit('setAuthenticating')
-    authUser(user)
+    return authUser(user)
       .then(user => {
         commit('setUser', user)
       })

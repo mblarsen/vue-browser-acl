@@ -16,6 +16,8 @@ of different groups.
 - Use of rules vs policies (see [`src/index.js`](src/index.js#L44))
 - Use of `beforeAll` (see [`PostPolicy`](src/index.js#L18))
 - Enable logging `localStorage.debug="demo*"` then refresh
+- Show the use of 'fail' as a function with purpose of implementing redirect
+  after login
 
 # Not in this demo
 

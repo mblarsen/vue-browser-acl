@@ -20,7 +20,11 @@ export default new Router({
       component: () => import('@pages/Admin'),
       meta: {
         role: 'admin',
-        fail: '/',
+        fail: function(to, from) {
+          log('intended route stored in localStorage')
+          window.localStorage.setItem('intendedRoute', to.name)
+          return '/'
+        },
       },
     },
     {

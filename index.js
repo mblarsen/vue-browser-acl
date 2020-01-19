@@ -135,8 +135,12 @@ export default {
           if (result === true) {
             return next()
           }
-          const fail = chain.getFail() === '$from' ? from.path : chain.getFail()
-          next(fail || options.failRoute)
+
+          const fail =
+            (chain.getFail() === '$from' ? from.path : chain.getFail()) ||
+            options.failRoute
+
+          next(typeof fail === 'function' ? fail(to, from) : fail)
         })
       })
     }

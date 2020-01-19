@@ -27,6 +27,10 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import debug from 'debug'
+
+const log = debug('demo')
+
 export default {
   data() {
     return {
@@ -53,7 +57,16 @@ export default {
     ...mapActions('user', ['logout']),
     authenticate() {
       if (this.username.trim()) {
-        this.$store.dispatch('user/authenticate', { ...this.formUser })
+        this.$store
+          .dispatch('user/authenticate', { ...this.formUser })
+          .then(() => {
+            const intendedRoute = window.localStorage.getItem('intendedRoute')
+            if (intendedRoute) {
+              log(`redirecting to intended route: ${intendedRoute}`)
+              this.$router.replace({ name: intendedRoute })
+              window.localStorage.removeItem('intendedRoute')
+            }
+          })
       }
     },
   },
