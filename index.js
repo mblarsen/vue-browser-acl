@@ -38,6 +38,7 @@ export default {
     options = Object.assign(
       {
         acl: { strict },
+        aliases: ['role'],
         assumeGlobal: !strict,
         caseMode: true,
         debug: false,
@@ -48,6 +49,8 @@ export default {
       },
       options
     )
+
+    const findCan = findCanWithOptions(options)
 
     /* setup acl */
     let acl = setupCallback
@@ -65,15 +68,12 @@ export default {
           (!subject && !options.strict)
       }
 
-      /* check for both can and role */
-      const getCan = meta => meta.can || meta.role
-
       /* convert 'edit Post' to ['edit', 'Post'] */
       const metaToStatementPair = meta => {
         const [
           verb = null,
           subject = options.assumeGlobal ? GlobalRule : null
-        ] = (getCan(meta) || '').split(' ')
+        ] = (findCan(meta) || '').split(' ')
         return [verb, subject]
       }
 
@@ -94,7 +94,7 @@ export default {
 
               fail = meta.fail
 
-              const can = getCan(meta)
+              const can = findCan(meta)
 
               const nextPromise = typeof can === 'function'
                 ? can(to, from, canNavigate)
@@ -120,7 +120,7 @@ export default {
 
       router.beforeEach((to, from, next) => {
         const metas = to.matched
-          .filter(route => route.meta && getCan(route.meta))
+          .filter(route => route.meta && findCan(route.meta))
           .map(route => route.meta)
 
         const chain = chainCans(metas, to, from)
@@ -141,8 +141,8 @@ export default {
       acl.router(options.router)
     }
 
-    /* create directive */
-    Vue.directive(options.directive, function(el, binding, vnode) {
+    /* directive update handler */
+    const directiveHandler = function(el, binding, vnode) {
       const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
 
       let verb, verbArg, subject, params
@@ -193,7 +193,14 @@ export default {
           el.readOnly = true
         }
       }
-    })
+    }
+
+    /* set up directive for 'can' and aliases */
+    const directiveNames = [options.directive, ...options.aliases]
+    directiveNames.forEach((name) => Vue.directive(
+      name,
+      directiveHandler
+    ))
 
     /* define helpers */
     if (options.helper) {
@@ -240,6 +247,16 @@ function commentNode(el, vnode) {
   if (el.parentNode) {
     el.parentNode.replaceChild(comment, el)
   }
+}
+
+/**
+ * Return the first property from meta that is 'can' or one of its aliases.
+ */
+const findCanWithOptions = (options) => (meta) => {
+  return [options.directive, ...options.aliases]
+    .map(key => meta[key])
+    .filter(i => i)
+    .shift()
 }
 
 /**
