@@ -21,6 +21,7 @@
 - Works collections of objects `v-can.some` or `v-can.every`
 - Works with **vue-router** to guard routes
 - Works with **vuex** and plain objects
+- 2.5kb zipped
 
 For more background on the "syntax design" read this short article: [Vue user permissions through directives](https://codeburst.io/reusable-vue-directives-v-can-753bf54e563f).
 
