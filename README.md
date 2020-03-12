@@ -15,6 +15,7 @@
 - Adds `v-can` directive with simple syntax: 
   - `v-can:edit="post"` an instance on the component
   - `v-can:create="'Post'"` (the type)
+  - `v-role:manager` (alias, for better semantic)
 - Optionally adds `$can` and `$can.not` helper functions
 - Can **hide** `v-can` or to just **disable** `v-can.disable` a section, tab,
   or button
@@ -38,6 +39,12 @@ You don't need a subject (see [global rules](#global-rules)).
 
 ```vue
 <button v-can:review>Review</button>
+```
+
+Has a default alias, but you can customize it.
+
+```vue
+<button v-role:manager>Delete</button>
 ```
 
 Disables button if user does not have permission to transfer repo, or make it
