@@ -33,23 +33,23 @@
     "build:docs": "documentation build index.js -f md -o dist/docs.md"
   },
   "dependencies": {
-    "browser-acl": "^0.7.3"
+    "browser-acl": "^0.7.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
     "@vue/test-utils": "^1.0.0-beta.29",
-    "babel-jest": "^24.8.0",
+    "babel-jest": "^25.1.0",
     "documentation": "^6.1.0",
-    "jest": "^24.8.0",
+    "jest": "^25.1.0",
     "rollup": "^1.19.4",
-    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.0.2",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-terser": "^5.1.1",
-    "rollup-plugin-vue": "^5.0.1",
-    "vue": "^2.6.10",
-    "vue-template-compiler": "^2.6.10"
+    "rollup-plugin-terser": "^5.3.0",
+    "rollup-plugin-vue": "^5.1.6",
+    "vue": "^2.6.11",
+    "vue-template-compiler": "^2.6.11"
   },
   "prettier": {
     "semi": false,

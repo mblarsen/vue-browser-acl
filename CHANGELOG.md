@@ -1,5 +1,9 @@
 # CHANGELOG
 
+next
+
+- chore: update dependencies (browser-acl 7.3 -> 7.5 amongst other things)
+
 0.13.5
 
 - feat: fail and failRoute can be a function which allows you to do things like
