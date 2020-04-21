@@ -16,6 +16,16 @@
         "example",
         "test"
       ]
+    },
+    {
+      "login": "jasminexie",
+      "name": "Jasmine Xie",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/10828483?v=4",
+      "profile": "https://jasminexie.github.io",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
