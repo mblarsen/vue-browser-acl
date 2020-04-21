@@ -1,4 +1,7 @@
 # vue-browser-acl 🔒
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Build status](http://img.shields.io/travis/mblarsen/browser-acl.svg)](http://travis-ci.org/mblarsen/vue-browser-acl)
 [![codebeat badge](https://codebeat.co/badges/8ca0a5dd-6e9f-4b88-8c01-43936e1972e7)](https://codebeat.co/projects/github-com-mblarsen-vue-browser-acl-master)
@@ -528,3 +531,22 @@ These are related projects with different approaches:
 * [`vue-kindergarten`](https://github.com/JiriChara/vue-kindergarten) uses a powerful sandbox pattern. Integrates with Nuxt.js
 * [`vue-acl`](https://github.com/leonardovilarinho/vue-acl) rather than saying what you can do you tell what the role is needed to perform an action.
 * [`casl-vue`](https://github.com/stalniy/casl/tree/master/packages/casl-vue)
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://www.codeboutique.com"><img src="https://avatars0.githubusercontent.com/u/247048?v=4" width="100px;" alt=""/><br /><sub><b>Michael Bøcker-Larsen</b></sub></a><br /><a href="https://github.com/mblarsen/vue-browser-acl/commits?author=mblarsen" title="Code">💻</a> <a href="https://github.com/mblarsen/vue-browser-acl/commits?author=mblarsen" title="Documentation">📖</a> <a href="#example-mblarsen" title="Examples">💡</a> <a href="https://github.com/mblarsen/vue-browser-acl/commits?author=mblarsen" title="Tests">⚠️</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
