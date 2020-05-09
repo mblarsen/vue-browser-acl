@@ -540,6 +540,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://www.codeboutique.com"><img src="https://avatars0.githubusercontent.com/u/247048?v=4" width="100px;" alt=""/><br /><sub><b>Michael Bøcker-Larsen</b></sub></a><br /><a href="https://github.com/mblarsen/vue-browser-acl/commits?author=mblarsen" title="Code">💻</a> <a href="https://github.com/mblarsen/vue-browser-acl/commits?author=mblarsen" title="Documentation">📖</a> <a href="#example-mblarsen" title="Examples">💡</a> <a href="https://github.com/mblarsen/vue-browser-acl/commits?author=mblarsen" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://jasminexie.github.io"><img src="https://avatars2.githubusercontent.com/u/10828483?v=4" width="100px;" alt=""/><br /><sub><b>Jasmine Xie</b></sub></a><br /><a href="https://github.com/mblarsen/vue-browser-acl/issues?q=author%3Ajasminexie" title="Bug reports">🐛</a> <a href="https://github.com/mblarsen/vue-browser-acl/commits?author=jasminexie" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/JasonLandbridge"><img src="https://avatars0.githubusercontent.com/u/15127381?v=4" width="100px;" alt=""/><br /><sub><b>JasonLandbridge</b></sub></a><br /><a href="#maintenance-JasonLandbridge" title="Maintenance">🚧</a></td>
   </tr>
 </table>
 
