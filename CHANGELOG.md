@@ -2,6 +2,8 @@
 
 ## next
 
+## 0.13.6
+
 - chore: add TypeScript definitions (thanks to @JasonLandbridge)
 - chore: update dependencies (browser-acl 7.3 -> 7.5 amongst other things)
 
