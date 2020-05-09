@@ -26,6 +26,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "JasonLandbridge",
+      "name": "JasonLandbridge",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/15127381?v=4",
+      "profile": "https://github.com/JasonLandbridge",
+      "contributions": [
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
