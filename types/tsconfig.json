@@ -17,7 +17,7 @@
         "forceConsistentCasingInFileNames": true
     },
     "files": [
-        "index.d.ts",
-        "vue-browser-acl-tests.ts"
+        "vue-browser-acl.d.ts",
+        "../test/vue-browser-acl-tests.ts"
     ]
 }

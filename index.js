@@ -232,6 +232,11 @@ export default {
 }
 
 /**
+ * Typescript types
+ */
+export { default as Types } from './types'
+
+/**
  * Create comment node
  *
  * @private
