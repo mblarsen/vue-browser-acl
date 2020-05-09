@@ -232,11 +232,6 @@ export default {
 }
 
 /**
- * Typescript types
- */
-export { default as Types } from './types/vue-browser-acl'
-
-/**
  * Create comment node
  *
  * @private
