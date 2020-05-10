@@ -2,6 +2,10 @@
 
 ## next
 
+## 0.13.7
+
+- chore: improve TypeScript support over previous release (thanks to @JasonLandbridge)
+
 ## 0.13.6
 
 - chore: add TypeScript definitions (thanks to @JasonLandbridge)
