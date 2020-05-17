@@ -1,4 +1,54 @@
+import  _Vue from 'vue'
+import { VNode, DirectiveFunction }  from 'vue/types'
+import { DirectiveBinding } from 'vue/types/options'
+import VueRouter, { Route, RouteConfig }  from 'vue-router/types'
 import Acl, { GlobalRule } from 'browser-acl'
+
+interface AclOptions {
+  [key: string]: any;
+}
+
+interface VueRouterMeta {
+  fail?: string,
+  meta?: object,
+  [key: string]: any;
+}
+
+type PromiseChain = Promise<any> & {
+  getFail: () => string | Function | null
+}
+
+type Options = {
+  acl?: AclOptions,
+  aliases?: string[],
+  assumeGlobal?: boolean,
+  caseMode?: boolean,
+  debug?: boolean,
+  directive?: string,
+  failRoute?: string,
+  helper?: boolean,
+  strict?: boolean,
+  router?: VueRouter
+}
+
+type CompiledOptions = {
+  acl: AclOptions,
+  aliases: string[],
+  assumeGlobal: boolean,
+  caseMode: boolean,
+  debug: boolean,
+  directive: string,
+  failRoute: string,
+  helper: boolean,
+  strict: boolean,
+  router?: VueRouter
+}
+
+type User = object
+
+type UserGetter = () => User
+
+type SetupCallback = (acl: Acl) => void
 
 /**
  * VueAcl constructor function
@@ -29,13 +79,13 @@ import Acl, { GlobalRule } from 'browser-acl'
  * @param {?Object}  options.router Vue router
  */
 export default {
-  install: function(Vue, user, setupCallback, options = {}) {
-    /* ensure userAccessor is function */
-    const userAccessor = typeof user === 'function' ? user : () => user
+  install: function(Vue: _Vue, user: User|UserGetter, aclOrSetupCallback: Acl|SetupCallback|undefined|null = null, options: Options = {}) {
+    const userAccessor: Function = typeof user === 'function' ? user : () => user
 
     /* defaults */
     const strict = Boolean(options.strict)
-    options = Object.assign(
+
+    const opt: CompiledOptions = Object.assign(
       {
         acl: { strict },
         aliases: ['role'],
@@ -50,32 +100,34 @@ export default {
       options,
     )
 
-    const findCan = findCanWithOptions(options)
+    const findCan = findCanWithOptions(opt)
 
     /* setup acl */
-    let acl = setupCallback
-    if (typeof setupCallback === 'function') {
-      acl = new Acl(options.acl)
-      setupCallback(acl)
+    let acl: Acl
+    if (typeof aclOrSetupCallback === 'function') {
+      acl = new Acl(opt.acl)
+      aclOrSetupCallback(acl)
+    } else {
+      acl = aclOrSetupCallback
     }
 
     /* router init function */
-    acl.router = function(router) {
-      options.router = router
+    acl.router = function(router: VueRouter) {
+      opt.router = router
 
-      const canNavigate = (verb, subject, ...otherArgs) => {
+      const canNavigate = (verb: string, subject: string|null, ...otherArgs: any[]) => {
         return (
           (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) ||
-          (!subject && !options.strict)
+          (!subject && !opt.strict)
         )
       }
 
       /* convert 'edit Post' to ['edit', 'Post'] */
-      const metaToStatementPair = meta => {
+      const aclTuple = (value: string): [string, string|null] => {
         const [
-          verb = null,
-          subject = options.assumeGlobal ? GlobalRule : null,
-        ] = (findCan(meta) || '').split(' ')
+          verb,
+          subject = opt.assumeGlobal ? GlobalRule : null
+        ] = value.split(' ')
         return [verb, subject]
       }
 
@@ -85,26 +137,28 @@ export default {
        * mode at least). To break the chain return a none
        * true value
        */
-      const chainCans = (metas, to, from) => {
-        let fail = null
-        const chain = metas.reduce((chain, meta) => {
+      const chainCans = (metas: VueRouterMeta[], to: Route, from: Route): PromiseChain => {
+        let fail: string | null = null
+        const chain: PromiseChain = metas.reduce((chain, meta) => {
           return (
             chain
-              .then(result => {
+              .then((result: any) => {
                 if (result !== true) {
                   return result
                 }
 
-                fail = meta.fail
+                if (typeof meta.fail === 'string') {
+                  fail = meta.fail
+                }
 
                 const can = findCan(meta)
 
                 const nextPromise =
                   typeof can === 'function'
                     ? can(to, from, canNavigate)
-                    : Promise.resolve(canNavigate(...metaToStatementPair(meta)))
+                    : Promise.resolve(canNavigate(...aclTuple(can)))
 
-                if (options.strict && !(nextPromise instanceof Promise)) {
+                if (opt.strict && !(nextPromise instanceof Promise)) {
                   throw new Error(
                     '$route.meta.can must return a promise in strict mode',
                   )
@@ -114,31 +168,34 @@ export default {
               })
               // convert errors to false
               .catch(error => {
-                if (options.debug) {
+                if (opt.debug) {
                   console.error(error)
                 }
                 return false
               })
           )
-        }, Promise.resolve(true))
+        }, Promise.resolve(true)) as PromiseChain
         chain.getFail = () => fail
         return chain
       }
 
-      router.beforeEach((to, from, next) => {
+      router.beforeEach((to: Route, from: Route, next) => {
         const metas = to.matched
           .filter(route => route.meta && findCan(route.meta))
           .map(route => route.meta)
 
         const chain = chainCans(metas, to, from)
+
         chain.then(result => {
           if (result === true) {
             return next()
           }
 
-          const fail =
-            (chain.getFail() === '$from' ? from.path : chain.getFail()) ||
-            options.failRoute
+          let fail: string | Function | null = chain.getFail() || opt.failRoute
+
+          if (fail === '$from') {
+            fail = from.path
+          }
 
           next(typeof fail === 'function' ? fail(to, from) : fail)
         })
@@ -146,22 +203,23 @@ export default {
     }
 
     /* init router */
-    if (options.router) {
-      acl.router(options.router)
+    if (opt.router) {
+      acl.router(opt.router)
     }
 
     /* directive update handler */
-    const directiveHandler = function(el, binding, vnode) {
+    const directiveHandler: DirectiveFunction = function(el: HTMLElement, binding: DirectiveBinding,  vnode: VNode, oldVnode: VNode): void {
       const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
 
       let verb, verbArg, subject, params
       verbArg = binding.arg
+
       if (Array.isArray(binding.value) && binding.expression.startsWith('[')) {
         ;[verb, subject, params] = binding.modifiers.global
           ? arrayToGlobalExprTpl(binding)
           : arrayToExprTpl(binding)
       } else if (typeof binding.value === 'string') {
-        ;[verb, subject, params] = stringToExprTpl(binding, vnode, options)
+        ;[verb, subject, params] = stringToExprTpl(binding, vnode, opt)
       } else if (verbArg && typeof binding.value === 'object') {
         verb = verbArg
         subject = binding.value
@@ -169,7 +227,7 @@ export default {
       } else if (
         binding.value === undefined &&
         !binding.modifiers.global &&
-        options.assumeGlobal
+        opt.assumeGlobal
       ) {
         // Fall back to global if no value is provided
         verb = verbArg
@@ -177,7 +235,7 @@ export default {
         params = []
       }
 
-      if (options.assumeGlobal && !subject) {
+      if (opt.assumeGlobal && !subject) {
         subject = GlobalRule
         params = params || []
         verb = verb || verbArg
@@ -209,12 +267,12 @@ export default {
     }
 
     /* set up directive for 'can' and aliases */
-    const directiveNames = [options.directive, ...options.aliases]
+    const directiveNames = [opt.directive, ...opt.aliases]
     directiveNames.forEach(name => Vue.directive(name, directiveHandler))
 
     /* define helpers */
-    if (options.helper) {
-      const helper = `$${options.directive}`
+    if (opt.helper) {
+      const helper = `$${opt.directive}`
       Vue.prototype[helper] = function() {
         return acl.can(userAccessor(), ...arguments)
       }
@@ -262,17 +320,17 @@ function commentNode(el, vnode) {
 /**
  * Return the first property from meta that is 'can' or one of its aliases.
  */
-const findCanWithOptions = options => meta => {
-  return [options.directive, ...options.aliases]
-    .map(key => meta[key])
-    .filter(i => i)
+const findCanWithOptions = (opt: CompiledOptions) => (meta: VueRouterMeta): string|Function => {
+  return ([opt.directive, ...opt.aliases || []] as string[])
+    .map((key: string) => meta[key])
+    .filter(Boolean)
     .shift()
 }
 
 /**
  * Maps binding.value of type array to expression tuple
  */
-const arrayToExprTpl = ({ arg, value }) => [
+const arrayToExprTpl = ({ arg, value }: DirectiveBinding) => [
   arg || value[0],
   arg ? value[0] : value[1],
   arg ? value.slice(1) : value.slice(2),
@@ -281,7 +339,7 @@ const arrayToExprTpl = ({ arg, value }) => [
 /**
  * Maps binding.value of type array to global expression tuple
  */
-const arrayToGlobalExprTpl = ({ arg, value }) => [
+const arrayToGlobalExprTpl = ({ arg, value }: DirectiveBinding) => [
   arg || value[0],
   GlobalRule,
   arg ? value : value.slice(1),
@@ -290,7 +348,7 @@ const arrayToGlobalExprTpl = ({ arg, value }) => [
 /**
  * Maps binding.value of type string to expression tuple
  */
-const stringToExprTpl = ({ arg, value, modifiers }, vnode, options) => {
+const stringToExprTpl = ({ arg, value, modifiers }: DirectiveBinding, vnode: VNode, opt: CompiledOptions) => {
   let [verb, subject] = arg ? [arg, value] : value.split(' ')
 
   if (subject && modifiers.global) {
@@ -301,10 +359,11 @@ const stringToExprTpl = ({ arg, value, modifiers }, vnode, options) => {
 
   if (
     typeof subject === 'string' &&
-    options.caseMode &&
-    subject[0].match(/[a-z]/)
+    opt.caseMode &&
+    subject[0].match(/[a-z]/) &&
+    typeof vnode.context === 'object'
   ) {
-    subject = vnode.context[subject]
+    subject = vnode.context.$data[subject]
   }
 
   return [verb, subject, []]

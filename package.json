@@ -49,9 +49,10 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-vue": "^5.1.6",
+    "typescript": "^3.8.3",
     "vue": "^2.6.11",
-    "vue-template-compiler": "^2.6.11",
-    "typescript": "^3.8.3"
+    "vue-router": "^3.1.6",
+    "vue-template-compiler": "^2.6.11"
   },
   "prettier": {
     "semi": false,

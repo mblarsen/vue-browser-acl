@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "exclude": [ "./node_modules" ],
+    "module": "es2015",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "strict": true,
+    "target": "es5"
+}
