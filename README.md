@@ -24,7 +24,7 @@
 - Works with **vuex** and plain objects
 - 2.5kb zipped
 
-For more background on the "syntax design" read this short article: [Vue user permissions through directives](https://codeburst.io/reusable-vue-directives-v-can-753bf54e563f).
+For more background on the "syntax design" read this short article: [Vue user permissions through directives](https://blog.cheesefi.com/blog/vue-user-permissions-through-directives/).
 
 ## Examples
 
