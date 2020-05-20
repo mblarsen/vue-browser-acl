@@ -1,57 +1,21 @@
-import  _Vue from 'vue'
-import { VNode, DirectiveFunction }  from 'vue/types'
+import Acl from 'browser-acl'
+import { Verb, Subject } from 'browser-acl/types'
+import { VueConstructor, VNode, DirectiveFunction } from 'vue/types'
 import { DirectiveBinding } from 'vue/types/options'
-import VueRouter, { Route, RouteConfig }  from 'vue-router/types'
-import Acl, { GlobalRule } from 'browser-acl'
-
-interface AclOptions {
-  [key: string]: any;
-}
-
-interface VueRouterMeta {
-  fail?: string,
-  meta?: object,
-  [key: string]: any;
-}
-
-type PromiseChain = Promise<any> & {
-  getFail: () => string | Function | null
-}
-
-type Options = {
-  acl?: AclOptions,
-  aliases?: string[],
-  assumeGlobal?: boolean,
-  caseMode?: boolean,
-  debug?: boolean,
-  directive?: string,
-  failRoute?: string,
-  helper?: boolean,
-  strict?: boolean,
-  router?: VueRouter
-}
-
-type CompiledOptions = {
-  acl: AclOptions,
-  aliases: string[],
-  assumeGlobal: boolean,
-  caseMode: boolean,
-  debug: boolean,
-  directive: string,
-  failRoute: string,
-  helper: boolean,
-  strict: boolean,
-  router?: VueRouter
-}
-
-type User = object
-
-type UserGetter = () => User
-
-type SetupCallback = (acl: Acl) => void
+import VueRouter, { Route } from 'vue-router/types'
+import {
+  AclWithRouter,
+  CompiledOptions,
+  Options,
+  PromiseChain,
+  SetupCallback,
+  User,
+  UserGetter,
+  VueRouterMeta,
+} from './types'
 
 /**
- * VueAcl constructor function
+ * VueBrowserAcl
  *
  * ```javascript
  * import Vue from 'vue'
@@ -65,22 +29,16 @@ type SetupCallback = (acl: Acl) => void
  * ```
  *
  * @access public
- * @param {Function|Object} user A user instance or a function that returns the user
- * @param {Function|Object} setupCallback A configured Acl instance or a callback callback that adds rules and policies.
- * @param {Object}   options={}
- * @param {Object}  [options.acl={}] Options passed to the Acl constructor
- * @param {Boolean} [options.assumeGlobal=true] If no subject is specified in route assume it is a global rule
- * @param {Boolean} [options.caseMode=true] When true lower case subjects will be looked up on the vue context
- * @param {Boolean} [options.debug=false] Outputs errors and other useful information to the console
- * @param {Boolean} [options.directive='can'] Name of the directive, and helper function
- * @param {String}  [options.failRoute='/'] Set a default fail route
- * @param {Boolean} [options.helper=true] Adds helper function
- * @param {Boolean} [options.strict=false] Causes redirect to fail route if route permissions are absent
- * @param {?Object}  options.router Vue router
  */
 export default {
-  install: function(Vue: _Vue, user: User|UserGetter, aclOrSetupCallback: Acl|SetupCallback|undefined|null = null, options: Options = {}) {
-    const userAccessor: Function = typeof user === 'function' ? user : () => user
+  install: function (
+    Vue: VueConstructor,
+    user: User | UserGetter,
+    aclOrSetupCallback: Acl | SetupCallback | undefined = undefined,
+    options: Options = {},
+  ) {
+    const userAccessor: Function =
+      typeof user === 'function' ? user : () => user
 
     /* defaults */
     const strict = Boolean(options.strict)
@@ -103,19 +61,22 @@ export default {
     const findCan = findCanWithOptions(opt)
 
     /* setup acl */
-    let acl: Acl
+    let acl: AclWithRouter = new Acl(opt.acl) as AclWithRouter
     if (typeof aclOrSetupCallback === 'function') {
-      acl = new Acl(opt.acl)
       aclOrSetupCallback(acl)
-    } else {
+    } else if (aclOrSetupCallback instanceof Acl) {
       acl = aclOrSetupCallback
     }
 
     /* router init function */
-    acl.router = function(router: VueRouter) {
+    acl.router = function (router: VueRouter) {
       opt.router = router
 
-      const canNavigate = (verb: string, subject: string|null, ...otherArgs: any[]) => {
+      const canNavigate = (
+        verb: string,
+        subject: string | null,
+        ...otherArgs: any[]
+      ) => {
         return (
           (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) ||
           (!subject && !opt.strict)
@@ -123,10 +84,10 @@ export default {
       }
 
       /* convert 'edit Post' to ['edit', 'Post'] */
-      const aclTuple = (value: string): [string, string|null] => {
+      const aclTuple = (value: string): [string, string | null] => {
         const [
           verb,
-          subject = opt.assumeGlobal ? GlobalRule : null
+          subject = opt.assumeGlobal ? Acl.GlobalRule : null,
         ] = value.split(' ')
         return [verb, subject]
       }
@@ -137,7 +98,11 @@ export default {
        * mode at least). To break the chain return a none
        * true value
        */
-      const chainCans = (metas: VueRouterMeta[], to: Route, from: Route): PromiseChain => {
+      const chainCans = (
+        metas: VueRouterMeta[],
+        to: Route,
+        from: Route,
+      ): PromiseChain => {
         let fail: string | null = null
         const chain: PromiseChain = metas.reduce((chain, meta) => {
           return (
@@ -167,7 +132,7 @@ export default {
                 return nextPromise
               })
               // convert errors to false
-              .catch(error => {
+              .catch((error) => {
                 if (opt.debug) {
                   console.error(error)
                 }
@@ -179,14 +144,14 @@ export default {
         return chain
       }
 
-      router.beforeEach((to: Route, from: Route, next) => {
+      router.beforeEach((to: Route, from: Route, next: any) => {
         const metas = to.matched
-          .filter(route => route.meta && findCan(route.meta))
-          .map(route => route.meta)
+          .filter((route) => route.meta && findCan(route.meta))
+          .map((route) => route.meta)
 
         const chain = chainCans(metas, to, from)
 
-        chain.then(result => {
+        chain.then((result) => {
           if (result === true) {
             return next()
           }
@@ -208,8 +173,12 @@ export default {
     }
 
     /* directive update handler */
-    const directiveHandler: DirectiveFunction = function(el: HTMLElement, binding: DirectiveBinding,  vnode: VNode, oldVnode: VNode): void {
-      const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
+    const directiveHandler: DirectiveFunction = function (
+      el: HTMLElement,
+      binding: DirectiveBinding,
+      vnode: VNode,
+    ): void {
+      const behaviour: Behaviour = getBehaviour(binding.modifiers)
 
       let verb, verbArg, subject, params
       verbArg = binding.arg
@@ -231,12 +200,12 @@ export default {
       ) {
         // Fall back to global if no value is provided
         verb = verbArg
-        subject = GlobalRule
+        subject = Acl.GlobalRule
         params = []
       }
 
       if (opt.assumeGlobal && !subject) {
-        subject = GlobalRule
+        subject = Acl.GlobalRule
         params = params || []
         verb = verb || verbArg
       }
@@ -253,40 +222,111 @@ export default {
       const ok = acl[aclMethod](userAccessor(), verb, subject, ...params)
       const not = binding.modifiers.not
 
-      el.disabled = false
-      el.readOnly = false
+      const elDisabled: HasDisabledElement | false = supportsDisabled(el)
+      const elReadOnly: HasReadOnlyElement | false = supportsReadOnly(el)
+
+      if (elDisabled) {
+        elDisabled.disabled = false
+      }
+
+      if (elReadOnly) {
+        elReadOnly.readOnly = false
+      }
+
       if ((ok && not) || (!ok && !not)) {
         if (behaviour === 'hide') {
           commentNode(el, vnode)
-        } else if (behaviour === 'disable') {
-          el.disabled = true
-        } else if (behaviour === 'readonly') {
-          el.readOnly = true
+        } else if (behaviour === 'disable' && elDisabled) {
+          elDisabled.disabled = true
+        } else if (behaviour === 'readonly' && elReadOnly) {
+          elReadOnly.readOnly = true
         }
       }
     }
 
     /* set up directive for 'can' and aliases */
     const directiveNames = [opt.directive, ...opt.aliases]
-    directiveNames.forEach(name => Vue.directive(name, directiveHandler))
+    directiveNames.forEach((name) => Vue.directive(name, directiveHandler))
 
     /* define helpers */
     if (opt.helper) {
       const helper = `$${opt.directive}`
-      Vue.prototype[helper] = function() {
-        return acl.can(userAccessor(), ...arguments)
+      Vue.prototype[helper] = function (
+        verb: Verb,
+        subject: Subject,
+        ...args: any[]
+      ) {
+        return acl.can(userAccessor(), verb, subject, ...args)
       }
-      Vue.prototype[helper].not = function() {
-        return !acl.can(userAccessor(), ...arguments)
+      Vue.prototype[helper].not = function (
+        verb: Verb,
+        subject: Subject,
+        ...args: any[]
+      ) {
+        return !acl.can(userAccessor(), verb, subject, ...args)
       }
-      Vue.prototype[helper].every = function() {
-        return acl.every(userAccessor(), ...arguments)
+      Vue.prototype[helper].every = function (
+        verb: Verb,
+        subjects: Subject[],
+        ...args: any[]
+      ) {
+        return acl.every(userAccessor(), verb, subjects, ...args)
       }
-      Vue.prototype[helper].some = function() {
-        return acl.some(userAccessor(), ...arguments)
+      Vue.prototype[helper].some = function (
+        verb: Verb,
+        subjects: Subject[],
+        ...args: any[]
+      ) {
+        return acl.some(userAccessor(), verb, subjects, ...args)
       }
     }
   },
+}
+
+type Behaviour = 'disable' | 'readonly' | 'hide'
+
+function getBehaviour(modifiers: any): Behaviour {
+  if (typeof modifiers.disable !== 'undefined') {
+    return 'disable'
+  }
+  if (typeof modifiers.readonly !== 'undefined') {
+    return 'readonly'
+  }
+  return 'hide'
+}
+
+interface HasDisabledElement extends HTMLElement {
+  disabled: string | boolean
+}
+
+const disabledTypes = [
+  HTMLButtonElement,
+  HTMLFieldSetElement,
+  HTMLInputElement,
+  HTMLOptGroupElement,
+  HTMLOptionElement,
+  HTMLSelectElement,
+  HTMLTextAreaElement,
+]
+
+function supportsDisabled(el: HTMLElement): HasDisabledElement | false {
+  if (disabledTypes.some((type) => el instanceof type)) {
+    return el as HasDisabledElement
+  }
+  return false
+}
+
+interface HasReadOnlyElement extends HTMLElement {
+  readOnly: string | boolean
+}
+
+const readOnlyTypes = [HTMLInputElement, HTMLTextAreaElement]
+
+function supportsReadOnly(el: HTMLElement): HasReadOnlyElement | false {
+  if (readOnlyTypes.some((type) => el instanceof type)) {
+    return el as HasReadOnlyElement
+  }
+  return false
 }
 
 /**
@@ -295,7 +335,7 @@ export default {
  * @private
  * @author https://stackoverflow.com/questions/43003976/a-custom-directive-similar-to-v-if-in-vuejs#43543814
  */
-function commentNode(el, vnode) {
+function commentNode(el: HTMLElement, vnode: VNode) {
   const comment = document.createComment(' ')
 
   Object.defineProperty(comment, 'setAttribute', {
@@ -306,9 +346,12 @@ function commentNode(el, vnode) {
   vnode.elm = comment
   vnode.isComment = true
   vnode.tag = undefined
+
+  vnode.data = vnode.data || {}
   vnode.data.directives = undefined
 
   if (vnode.componentInstance) {
+    // @ts-ignore
     vnode.componentInstance.$el = comment
   }
 
@@ -320,8 +363,10 @@ function commentNode(el, vnode) {
 /**
  * Return the first property from meta that is 'can' or one of its aliases.
  */
-const findCanWithOptions = (opt: CompiledOptions) => (meta: VueRouterMeta): string|Function => {
-  return ([opt.directive, ...opt.aliases || []] as string[])
+const findCanWithOptions = (opt: CompiledOptions) => (
+  meta: VueRouterMeta,
+): string | Function => {
+  return ([opt.directive, ...(opt.aliases || [])] as string[])
     .map((key: string) => meta[key])
     .filter(Boolean)
     .shift()
@@ -341,14 +386,18 @@ const arrayToExprTpl = ({ arg, value }: DirectiveBinding) => [
  */
 const arrayToGlobalExprTpl = ({ arg, value }: DirectiveBinding) => [
   arg || value[0],
-  GlobalRule,
+  Acl.GlobalRule,
   arg ? value : value.slice(1),
 ]
 
 /**
  * Maps binding.value of type string to expression tuple
  */
-const stringToExprTpl = ({ arg, value, modifiers }: DirectiveBinding, vnode: VNode, opt: CompiledOptions) => {
+const stringToExprTpl = (
+  { arg, value, modifiers }: DirectiveBinding,
+  vnode: VNode,
+  opt: CompiledOptions,
+) => {
   let [verb, subject] = arg ? [arg, value] : value.split(' ')
 
   if (subject && modifiers.global) {

@@ -16,42 +16,39 @@
   },
   "bugs": "https://github.com/mblarsen/vue-browser-acl/issues",
   "license": "MIT",
-  "main": "dist/vue-browser-acl.common.js",
-  "module": "dist/vue-browser-acl.esm.js",
-  "browser": "dist/vue-browser-acl.umd.js",
-  "unpkg": "dist/vue-browser-acl.umd.js",
+  "source": "./index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.module.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "typings": "types/vue-browser-acl.d.ts",
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watchAll",
-    "build": "rollup -c",
-    "build:watch": "rollup -c -w",
+    "prebuild": "rm -rf ./dist",
+    "build": "microbundle build --tsconfig ./tsconfig.json --name VueBrowserAcl",
+    "postbuild": "cp types/index.d.ts dist/index.d.ts",
+    "test": "jest --config jest.config.json",
+    "test:watch": "jest jest --config jest.config.json --watchAll",
     "version": "npm run build && git add -A dist",
-    "postversion": "git push && git push --tags",
-    "build:docs": "documentation build index.js -f md -o dist/docs.md"
+    "postversion": "git push && git push --tags"
   },
   "dependencies": {
-    "browser-acl": "^0.7.5"
+    "browser-acl": "git+https://github.com/mblarsen/browser-acl.git#refactor-ts"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.0",
-    "@vue/test-utils": "^1.0.0-beta.29",
-    "babel-jest": "^25.1.0",
-    "documentation": "^6.1.0",
-    "jest": "^25.1.0",
-    "rollup": "^1.19.4",
-    "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-commonjs": "^10.0.2",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-terser": "^5.3.0",
-    "rollup-plugin-vue": "^5.1.6",
-    "typescript": "^3.8.3",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@types/jest": "^25.2.3",
+    "@vue/test-utils": "^1.0.3",
+    "babel-jest": "^26.0.1",
+    "jest": "^26.0.1",
+    "microbundle": "^0.12.0",
+    "ts-jest": "^26.0.0",
+    "typescript": "^3.9.3",
     "vue": "^2.6.11",
-    "vue-router": "^3.1.6",
+    "vue-router": "^3.2.0",
     "vue-template-compiler": "^2.6.11"
   },
   "prettier": {
@@ -59,5 +56,5 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
-  "thanks": "https://flattr.com/@mblarsen"
+  "thanks": "https://github.com/mblarsen/vue-browser-acl?sponsor=1"
 }

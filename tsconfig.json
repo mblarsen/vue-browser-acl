@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "exclude": [ "./node_modules" ],
-    "module": "es2015",
-    "moduleResolution": "node",
-    "outDir": "./dist",
-    "strict": true,
-    "target": "es5"
+    "declaration": false,
+    "esModuleInterop": true,
+    "strict": true
+  },
+  "exclude": ["node_modules", "**/*.test.ts", "dist"]
 }
