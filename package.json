@@ -36,7 +36,7 @@
     "postversion": "git push && git push --tags"
   },
   "dependencies": {
-    "browser-acl": "git+https://github.com/mblarsen/browser-acl.git#refactor-ts"
+    "browser-acl": "^0.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
