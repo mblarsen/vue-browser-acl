@@ -1,6 +1,5 @@
-import Vue from 'vue'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import { User } from './types'
+import { User } from './index.d'
 import Acl from 'browser-acl'
 import { Verb } from 'browser-acl/types'
 import VueAcl from './index'
@@ -12,14 +11,6 @@ const unsetUser = () => (_user = null)
 const getUser = () => _user
 
 const HIDDEN_STR = '<!-- -->'
-
-// class User {}
-// class Apple {}
-// class Job {
-//   constructor(data) {
-//     Object.assign(this, data || {})
-//   }
-// }
 
 class Post {
   id: any
