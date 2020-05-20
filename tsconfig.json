@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "esModuleInterop": true,
+    "strict": true
+  },
+  "exclude": ["node_modules", "**/*.test.ts", "dist"]
+}
