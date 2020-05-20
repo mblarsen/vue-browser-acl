@@ -2,6 +2,8 @@
 
 ## next
 
+## 0.14.0
+
 - refactor: a rewrite in TypeScript
 
 ## 0.13.7
