@@ -60,7 +60,7 @@ export type UserGetter = () => User
 
 export type SetupCallback = (acl: Acl) => void
 
-export declare class VueBrowserAcl {
+declare class VueAcl {
   install: (
     Vue: VueConstructor,
     user: User | UserGetter,
@@ -84,6 +84,4 @@ declare module '@nuxt/types' {
   }
 }
 
-declare const vueBrowserAclGlobalInstance: VueBrowserAcl
-
-export default vueBrowserAclGlobalInstance
+export default VueAcl

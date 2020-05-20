@@ -16,19 +16,20 @@
   },
   "bugs": "https://github.com/mblarsen/vue-browser-acl/issues",
   "license": "MIT",
-  "source": "./index.ts",
+  "source": "index.ts",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
-  "types": "dist/index.d.ts",
+  "types": "index.d.ts",
   "files": [
     "dist",
-    "types"
+    "types",
+    "index.ts",
+    "index.d.ts"
   ],
   "typings": "types/vue-browser-acl.d.ts",
   "scripts": {
     "prebuild": "rm -rf ./dist",
     "build": "microbundle build --tsconfig ./tsconfig.json --name VueBrowserAcl",
-    "postbuild": "cp types/index.d.ts dist/index.d.ts",
     "test": "jest --config jest.config.json",
     "test:watch": "jest jest --config jest.config.json --watchAll",
     "version": "npm run build && git add -A dist",

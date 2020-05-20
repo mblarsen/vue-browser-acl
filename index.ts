@@ -12,10 +12,10 @@ import {
   User,
   UserGetter,
   VueRouterMeta,
-} from './types'
+} from './index.d'
 
 /**
- * VueBrowserAcl
+ * VueAcl
  *
  * ```javascript
  * import Vue from 'vue'
