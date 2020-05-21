@@ -27,16 +27,14 @@ import {
  *   acl.rule('moderate', Post, (user) => user.isModerator())
  * })
  * ```
- *
- * @access public
  */
-export default {
-  install: function (
+class VueAcl {
+  install(
     Vue: VueConstructor,
     user: User | UserGetter,
     aclOrSetupCallback: Acl | SetupCallback | undefined = undefined,
     options: Options = {},
-  ) {
+  ): void {
     const userAccessor: Function =
       typeof user === 'function' ? user : () => user
 
@@ -280,7 +278,7 @@ export default {
         return acl.some(userAccessor(), verb, subjects, ...args)
       }
     }
-  },
+  }
 }
 
 type Behaviour = 'disable' | 'readonly' | 'hide'
@@ -417,3 +415,5 @@ const stringToExprTpl = (
 
   return [verb, subject, []]
 }
+
+export default VueAcl

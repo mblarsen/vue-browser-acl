@@ -60,6 +60,20 @@ export type UserGetter = () => User
 
 export type SetupCallback = (acl: Acl) => void
 
+/**
+ * VueAcl
+ *
+ * ```javascript
+ * import Vue from 'vue'
+ * import Acl from 'vue-browser-acl'
+ *
+ * Vue.use(Acl, user, (acl) => {
+ *   acl.rule(view, Post)
+ *   acl.rule([edit, delete], Post, (user, post) => post.userId === user.id)
+ *   acl.rule('moderate', Post, (user) => user.isModerator())
+ * })
+ * ```
+ */
 declare class VueAcl {
   install: (
     Vue: VueConstructor,
