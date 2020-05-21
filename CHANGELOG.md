@@ -8,7 +8,15 @@
 
 ## 0.14.0
 
-- refactor: a rewrite in TypeScript
+- change: a rewrite in TypeScript
+- breaking: 'disable' and 'readonly' will now only work on the HTMLElements
+  that support those attributes. Effectively this will not change anything
+  with regards to the DOM elements, however, if you've written CSS around it
+  may no longer work.
+  E.g. `<div disabled="disabled">`, CSS: `div[disabled] { color: grey }` if
+  this is a common pattern and you need it please add an issue about it.
+  Note: 'hide' (default) will work for all elements.
+- fix: no longer clears vnode.data, only its directives
 
 ## 0.13.7
 
