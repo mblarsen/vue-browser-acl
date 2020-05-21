@@ -28,7 +28,7 @@ import {
  * })
  * ```
  */
-class VueAcl {
+const VueAcl = {
   install(
     Vue: VueConstructor,
     user: User | UserGetter,
@@ -278,7 +278,7 @@ class VueAcl {
         return acl.some(userAccessor(), verb, subjects, ...args)
       }
     }
-  }
+  },
 }
 
 type Behaviour = 'disable' | 'readonly' | 'hide'

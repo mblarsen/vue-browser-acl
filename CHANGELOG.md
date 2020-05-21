@@ -2,6 +2,10 @@
 
 ## next
 
+## 0.14.2
+
+- fix: fixed regression introduced in 0.14.1
+
 ## 0.14.1
 
 - feat: "align" package export with type definitions to get better intelisense.
