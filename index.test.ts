@@ -1,7 +1,7 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { User } from './index.d'
 import Acl from 'browser-acl'
-import { Verb } from 'browser-acl/types'
+import { Verb } from 'browser-acl'
 import VueAcl from './index'
 
 let _user: User | null

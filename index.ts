@@ -1,5 +1,5 @@
 import Acl from 'browser-acl'
-import { Verb, Subject } from 'browser-acl/types'
+import { Verb, VerbObject } from 'browser-acl'
 import { VueConstructor, VNode, DirectiveFunction } from 'vue/types'
 import { DirectiveBinding } from 'vue/types/options'
 import VueRouter, { Route } from 'vue-router/types'
@@ -72,12 +72,13 @@ const VueAcl = {
 
       const canNavigate = (
         verb: string,
-        subject: string | null,
+        verbObject: string | null,
         ...otherArgs: any[]
       ) => {
         return (
-          (subject && acl.can(userAccessor(), verb, subject, ...otherArgs)) ||
-          (!subject && !opt.strict)
+          (verbObject &&
+            acl.can(userAccessor(), verb, verbObject, ...otherArgs)) ||
+          (!verbObject && !opt.strict)
         )
       }
 
@@ -85,9 +86,9 @@ const VueAcl = {
       const aclTuple = (value: string): [string, string | null] => {
         const [
           verb,
-          subject = opt.assumeGlobal ? Acl.GlobalRule : null,
+          verbObject = opt.assumeGlobal ? Acl.GlobalRule : null,
         ] = value.split(' ')
-        return [verb, subject]
+        return [verb, verbObject]
       }
 
       /**
@@ -178,18 +179,18 @@ const VueAcl = {
     ): void {
       const behaviour: Behaviour = getBehaviour(binding.modifiers)
 
-      let verb, verbArg, subject, params
+      let verb, verbArg, verbObject, params
       verbArg = binding.arg
 
       if (Array.isArray(binding.value) && binding.expression.startsWith('[')) {
-        ;[verb, subject, params] = binding.modifiers.global
+        ;[verb, verbObject, params] = binding.modifiers.global
           ? arrayToGlobalExprTpl(binding)
           : arrayToExprTpl(binding)
       } else if (typeof binding.value === 'string') {
-        ;[verb, subject, params] = stringToExprTpl(binding, vnode, opt)
+        ;[verb, verbObject, params] = stringToExprTpl(binding, vnode, opt)
       } else if (verbArg && typeof binding.value === 'object') {
         verb = verbArg
-        subject = binding.value
+        verbObject = binding.value
         params = []
       } else if (
         binding.value === undefined &&
@@ -198,18 +199,18 @@ const VueAcl = {
       ) {
         // Fall back to global if no value is provided
         verb = verbArg
-        subject = Acl.GlobalRule
+        verbObject = Acl.GlobalRule
         params = []
       }
 
-      if (opt.assumeGlobal && !subject) {
-        subject = Acl.GlobalRule
+      if (opt.assumeGlobal && !verbObject) {
+        verbObject = Acl.GlobalRule
         params = params || []
         verb = verb || verbArg
       }
 
-      if (!verb || !subject) {
-        throw new Error('Missing verb or subject')
+      if (!verb || !verbObject) {
+        throw new Error('Missing verb or verb object')
       }
 
       const aclMethod =
@@ -217,7 +218,7 @@ const VueAcl = {
         (binding.modifiers.every && 'every') ||
         'can'
 
-      const ok = acl[aclMethod](userAccessor(), verb, subject, ...params)
+      const ok = acl[aclMethod](userAccessor(), verb, verbObject, ...params)
       const not = binding.modifiers.not
 
       const elDisabled: HasDisabledElement | false = supportsDisabled(el)
@@ -251,31 +252,31 @@ const VueAcl = {
       const helper = `$${opt.directive}`
       Vue.prototype[helper] = function (
         verb: Verb,
-        subject: Subject,
+        verbObject: VerbObject,
         ...args: any[]
       ) {
-        return acl.can(userAccessor(), verb, subject, ...args)
+        return acl.can(userAccessor(), verb, verbObject, ...args)
       }
       Vue.prototype[helper].not = function (
         verb: Verb,
-        subject: Subject,
+        verbObject: VerbObject,
         ...args: any[]
       ) {
-        return !acl.can(userAccessor(), verb, subject, ...args)
+        return !acl.can(userAccessor(), verb, verbObject, ...args)
       }
       Vue.prototype[helper].every = function (
         verb: Verb,
-        subjects: Subject[],
+        verbObjects: VerbObject[],
         ...args: any[]
       ) {
-        return acl.every(userAccessor(), verb, subjects, ...args)
+        return acl.every(userAccessor(), verb, verbObjects, ...args)
       }
       Vue.prototype[helper].some = function (
         verb: Verb,
-        subjects: Subject[],
+        verbObjects: VerbObject[],
         ...args: any[]
       ) {
-        return acl.some(userAccessor(), verb, subjects, ...args)
+        return acl.some(userAccessor(), verb, verbObjects, ...args)
       }
     }
   },
@@ -396,24 +397,24 @@ const stringToExprTpl = (
   vnode: VNode,
   opt: CompiledOptions,
 ) => {
-  let [verb, subject] = arg ? [arg, value] : value.split(' ')
+  let [verb, verbObject] = arg ? [arg, value] : value.split(' ')
 
-  if (subject && modifiers.global) {
+  if (verbObject && modifiers.global) {
     throw new Error(
-      'You cannot provide subject and use global modifier at the same time',
+      'You cannot provide verb object and use global modifier at the same time',
     )
   }
 
   if (
-    typeof subject === 'string' &&
+    typeof verbObject === 'string' &&
     opt.caseMode &&
-    subject[0].match(/[a-z]/) &&
+    verbObject[0].match(/[a-z]/) &&
     typeof vnode.context === 'object'
   ) {
-    subject = vnode.context.$data[subject]
+    verbObject = vnode.context.$data[verbObject]
   }
 
-  return [verb, subject, []]
+  return [verb, verbObject, []]
 }
 
 export default VueAcl

@@ -12,7 +12,7 @@
 - Easily manage permissions with
   [browser-acl](https://github.com/mblarsen/browser-acl) using rules and/or
   policies (rules using classes)
-- Adds `v-can` directive with simple syntax: 
+- Adds `v-can` directive with simple syntax:
   - `v-can:edit="post"` an instance on the component
   - `v-can:create="'Post'"` (the type)
   - `v-role:manager` (alias, for better semantic)
@@ -35,7 +35,7 @@ repo.
 <button v-can:transfer="repo">Transfer</button>
 ```
 
-You don't need a subject (see [global rules](#global-rules)).
+You don't need a verb-object (see [global rules](#global-rules)).
 
 ```vue
 <button v-can:review>Review</button>
@@ -52,14 +52,14 @@ read-only if user cannot edit a post.
 
 ```vue
 <button v-can:transfer.disable="repo">Transfer</button>
-<input v-can:edit.readonly="post" type="text" name="title"/>
+<input v-can:edit.readonly="post" type="text" name="title" />
 ```
 
 It works on collections, e.g. the table is shown is the user can edit at least
 some of the items.
 
 ```vue
-<table v-can:edit.some="players">
+<table v-can:edit.some="players"></table>
 ```
 
 Or all of them.
@@ -73,7 +73,9 @@ Additionally you can use the string and array syntax.
 ```vue
 <button v-can="'transfer repo'">Transfer repo instance</button>
 <button v-can="'create Repo'">Transfer based on class</button>
-<button v-can="['transfer', repo, otherArgs]">Transfer with extra argument</button>
+<button
+  v-can="['transfer', repo, otherArgs]"
+>Transfer with extra argument</button>
 ```
 
 See `examples` for more detailed examples: routing, vuex, etc.
@@ -127,7 +129,7 @@ representation of what the object is.
 In this example it is assumed that you have a property type on your object:
 
 ```javascript
-acl.subjectMapper = s => typeof s === 'string' ? s : s.type
+acl.subjectMapper = (s) => (typeof s === 'string' ? s : s.type)
 ```
 
 E.g. a post:
@@ -140,7 +142,7 @@ E.g. a post:
 }
 ```
 
-See the details in browser-acl [Subject mapper section](https://github.com/mblarsen/browser-acl#subjectmapper).
+See the details in browser-acl [verb-object mapper section](https://github.com/mblarsen/browser-acl#subjectmapper).
 
 ## Usage
 
@@ -155,7 +157,7 @@ preferred syntax.
 
 ### Array flavor
 
-Verb, subject and optional parameters are passed as an array as the value for
+Verb, object and optional parameters are passed as an array as the value for
 the directive.
 
 ```vue
@@ -180,7 +182,7 @@ Cons:
 
 ### String flavor
 
-Verb and subject is combined in a string like `create Post` or `edit post` which makes
+Verb and object is combined in a string like `create Post` or `edit post` which makes
 up the value of the directive.
 
 ```vue
@@ -189,9 +191,9 @@ up the value of the directive.
 ```
 
 <details>
-The string `create Post` is interpreted as the verb 'create' on the subject with name
+The string `create Post` is interpreted as the verb 'create' on the object with name
 'Post' (a class name).  The string `edit post` is interpreted as the verb 'edit' on
-the subject that is a property on the component.
+the verb-object that is a property on the component.
 
 Pros:
 
@@ -201,14 +203,14 @@ Cons:
 
 - Cannot take additional arguments
 - Since the value is a string you lose the vue-compiler errors if you refer to something
-  that doesn't exist.
+that doesn't exist.
 </details>
 
 ### Argument flavor
 
 In this flavor the verb is passed as an argument to the directive and for the value can
 use either string or array flavor with the verb removed. Additionally the value can be a
-plain subject object as well.
+plain verb-object object as well.
 
 ```vue
 <button v-can:review>Review</button>
@@ -234,7 +236,7 @@ Cons:
 ### Modifiers
 
 There are a few modifiers. Three that affects the element (hide, disable, readonly) and two that let's
-you evaluate multiple subjects at once (some, every).
+you evaluate multiple verb-objects at once (some, every).
 
 ```vue
 <button v-can.disable="'delete post'">Delete</button>
@@ -286,16 +288,17 @@ element is shown.
 
 #### `some` and `every` modifiers
 
-The `some` and `every` arguments takes multiple subjects and will apply the
+The `some` and `every` arguments takes multiple verb-objects and will apply the
 same verb to all of them.
 
 ```vue
 <table v-can.some="['edit', players]">
-<button v-can:sell.every="players">Sell team</button>
-<button v-can:delete.some="[project, sprintBoard]">Delete</button>
+  <button v-can:sell.every="players">Sell team</button>
+  <button v-can:delete.some="[project, sprintBoard]">Delete</button>
+</table>
 ```
 
-Note that the subjects do not need to be the some kind. In the third example
+Note that the verb-objects do not need to be the some kind. In the third example
 above the delete button becomes visible if you either have delete permission on
 the project (think project owner) or you have it on the sprint board itself (a
 user with less permissions).
@@ -330,7 +333,7 @@ or
 
 ```javascript
 if (this.$can('edit', post)) {
-    axios.put(`/api/posts/${post.id}`, post)
+  axios.put(`/api/posts/${post.id}`, post)
 }
 ```
 
@@ -352,6 +355,7 @@ Vue.use(Acl, user, (acl) => {
     ..
 }, {router});
 ```
+
 </details>
 
 <details>
@@ -360,6 +364,7 @@ Vue.use(Acl, user, (acl) => {
 ```javascript
 acl.router(router)
 ```
+
 </details>
 
 You configure routes by adding `can` meta property to the route. E.g. if a
@@ -461,6 +466,7 @@ See options below.
 ## Options
 
 ### assumeGlobal
+
 `default: true`
 
 When true you can use [global rules](https://github.com/mblarsen/browser-acl#additional-parameters-and-global-rules)
@@ -470,21 +476,24 @@ Note: In strict mode this is turned of. You can override this by explicitly
 setting assumeGlobal to true.
 
 ### acl
+
 `default: {}`
 
 Options object passed to the Acl contructor.
 
 ### caseMode
+
 `default: true`
 
-Assume case means that an upper case subject is the name of a class or a constructor function and that a lower case subject
+Assume case means that an upper case verb-object is the name of a class or a constructor function and that a lower case verb-object
 is the component member name of an instance of that class.
 
-E.g. if subject is `post` the directive will try to look up the data member `post` on the component.
+E.g. if verb-object is `post` the directive will try to look up the data member `post` on the component.
 
-If `caseMode` is set to false this behavior is disabled and `post` will be treated as a subject name.
+If `caseMode` is set to false this behavior is disabled and `post` will be treated as a verb-object name.
 
 ### directive
+
 `default: can`
 
 The name of the directive. E.g. `can` produces a directive called `v-can` and a helper function called `$can`.
@@ -492,19 +501,23 @@ The name of the directive. E.g. `can` produces a directive called `v-can` and a 
 You'll most likely only use this if you want to replace this module with an existing one that uses a different name.
 
 ### failRoute
+
 `default: /`
 
 ### helper
+
 `default: true`
 
 Adds `$can`, `$can.not`, `$can.some`, and `$can.every` helper function to the Vue prototype when `true`.
 
 ### router
+
 `default: undefined`
 
 Pass in a router instance if you want to make use of the ACL functionality in routers.
 
 ### strict
+
 `default: false`
 
 When set to true a route without `meta.can` will automatically fail. In addition the setting
@@ -525,9 +538,9 @@ Vue.use(Acl, user, acl => {...}, {strict: true, acl: {strict: false}}
 
 These are related projects with different approaches:
 
-* [`vue-kindergarten`](https://github.com/JiriChara/vue-kindergarten) uses a powerful sandbox pattern. Integrates with Nuxt.js
-* [`vue-acl`](https://github.com/leonardovilarinho/vue-acl) rather than saying what you can do you tell what the role is needed to perform an action.
-* [`casl-vue`](https://github.com/stalniy/casl/tree/master/packages/casl-vue)
+- [`vue-kindergarten`](https://github.com/JiriChara/vue-kindergarten) uses a powerful sandbox pattern. Integrates with Nuxt.js
+- [`vue-acl`](https://github.com/leonardovilarinho/vue-acl) rather than saying what you can do you tell what the role is needed to perform an action.
+- [`casl-vue`](https://github.com/stalniy/casl/tree/master/packages/casl-vue)
 
 ## Contributors ✨
 
@@ -546,6 +559,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

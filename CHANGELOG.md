@@ -2,6 +2,11 @@
 
 ## next
 
+## 0.15.0
+
+- breaking: renamed 'Subject' → 'VerbObject' see [mblarsen/browser-acl's
+  CHANGELOG](mblarsen/browser-acl) for details.
+
 ## 0.14.2
 
 - fix: fixed regression introduced in 0.14.1
