@@ -1,20 +1,15 @@
-import { VueConstructor } from 'vue'
 import Acl from 'browser-acl'
-import { Verb, Subject } from 'browser-acl/types'
+import { Verb, VerbObject, Options as AclOptions } from 'browser-acl'
+import { VueConstructor } from 'vue/types'
 import VueRouter from 'vue-router/types'
-import { Options as AclOptions } from 'browser-acl/types'
+
+export { Verb, VerbObject, TestFunction } from 'browser-acl'
 
 export interface AclWithRouter extends Acl {
   router?: (router: VueRouter) => void
 }
 
-export type Helper = (verb: Verb, subject: Subject, ...args: any[]) => boolean
-
-export type HelperMany = (
-  verb: Verb,
-  subject: Subject[],
-  ...args: any[]
-) => boolean
+export type Behaviour = 'disable' | 'readonly' | 'hide'
 
 export type Options = {
   acl?: AclOptions
@@ -41,6 +36,18 @@ export type CompiledOptions = {
   strict: boolean
   router?: VueRouter
 }
+
+export type AclHelper = (
+  verb: Verb,
+  verbObject: VerbObject,
+  ...args: any[]
+) => boolean
+
+export type AclHelperMany = (
+  verb: Verb,
+  verbObject: VerbObject[],
+  ...args: any[]
+) => boolean
 
 export interface VueRouterMeta {
   fail?: string
@@ -74,7 +81,7 @@ export type SetupCallback = (acl: Acl) => void
  * })
  * ```
  */
-declare class VueAcl {
+export type VueAcl = {
   install: (
     Vue: VueConstructor,
     user: User | UserGetter,
@@ -83,19 +90,20 @@ declare class VueAcl {
   ) => void
 }
 
+declare module 'vue-browser-acl' {}
+
 declare module 'vue/types/vue' {
   interface VueConstructor {
-    $can: Helper
+    $can: AclHelper
   }
 }
 
 declare module '@nuxt/types' {
   interface NuxtAppOptions {
-    $can: Helper
+    $can: AclHelper
   }
   interface Context {
-    $can: Helper
+    $can: AclHelper
   }
 }
 
-export default VueAcl

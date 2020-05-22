@@ -3,8 +3,23 @@ import { Verb, VerbObject } from 'browser-acl'
 import { VueConstructor, VNode, DirectiveFunction } from 'vue/types'
 import { DirectiveBinding } from 'vue/types/options'
 import VueRouter, { Route } from 'vue-router/types'
+
 import {
   AclWithRouter,
+  Behaviour,
+  CompiledOptions,
+  Options,
+  PromiseChain,
+  SetupCallback,
+  User,
+  UserGetter,
+  VueAcl,
+  VueRouterMeta,
+} from '../types'
+
+export {
+  AclWithRouter,
+  Behaviour,
   CompiledOptions,
   Options,
   PromiseChain,
@@ -12,23 +27,9 @@ import {
   User,
   UserGetter,
   VueRouterMeta,
-} from './index.d'
+} from '../types'
 
-/**
- * VueAcl
- *
- * ```javascript
- * import Vue from 'vue'
- * import Acl from 'vue-browser-acl'
- *
- * Vue.use(Acl, user, (acl) => {
- *   acl.rule(view, Post)
- *   acl.rule([edit, delete], Post, (user, post) => post.userId === user.id)
- *   acl.rule('moderate', Post, (user) => user.isModerator())
- * })
- * ```
- */
-const VueAcl = {
+const VueAcl: VueAcl = {
   install(
     Vue: VueConstructor,
     user: User | UserGetter,
@@ -250,6 +251,7 @@ const VueAcl = {
     /* define helpers */
     if (opt.helper) {
       const helper = `$${opt.directive}`
+      /* @type AclHelper */
       Vue.prototype[helper] = function (
         verb: Verb,
         verbObject: VerbObject,
@@ -257,6 +259,7 @@ const VueAcl = {
       ) {
         return acl.can(userAccessor(), verb, verbObject, ...args)
       }
+      /* @type AclHelper */
       Vue.prototype[helper].not = function (
         verb: Verb,
         verbObject: VerbObject,
@@ -264,6 +267,7 @@ const VueAcl = {
       ) {
         return !acl.can(userAccessor(), verb, verbObject, ...args)
       }
+      /* @type AclHelperMany */
       Vue.prototype[helper].every = function (
         verb: Verb,
         verbObjects: VerbObject[],
@@ -271,6 +275,7 @@ const VueAcl = {
       ) {
         return acl.every(userAccessor(), verb, verbObjects, ...args)
       }
+      /* @type AclHelperMany */
       Vue.prototype[helper].some = function (
         verb: Verb,
         verbObjects: VerbObject[],
@@ -281,8 +286,6 @@ const VueAcl = {
     }
   },
 }
-
-type Behaviour = 'disable' | 'readonly' | 'hide'
 
 function getBehaviour(modifiers: any): Behaviour {
   if (typeof modifiers.disable !== 'undefined') {
