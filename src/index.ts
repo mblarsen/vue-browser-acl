@@ -27,6 +27,11 @@ export {
   VueRouterMeta,
 } from '../types'
 
+interface LooseHTMLElement extends HTMLElement {
+  disabled: boolean
+  readOnly: boolean
+}
+
 const VueAcl: VueAcl = {
   install(
     Vue: VueConstructor,
@@ -220,24 +225,17 @@ const VueAcl: VueAcl = {
       const ok = acl[aclMethod](userAccessor(), verb, verbObject, ...params)
       const not = binding.modifiers.not
 
-      const elDisabled: HasDisabledElement | false = supportsDisabled(el)
-      const elReadOnly: HasReadOnlyElement | false = supportsReadOnly(el)
-
-      if (elDisabled) {
-        elDisabled.disabled = false
-      }
-
-      if (elReadOnly) {
-        elReadOnly.readOnly = false
-      }
+      const el_ = el as LooseHTMLElement
+      el_.disabled = false
+      el_.readOnly = false
 
       if ((ok && not) || (!ok && !not)) {
         if (behaviour === 'hide') {
           commentNode(el, vnode)
-        } else if (behaviour === 'disable' && elDisabled) {
-          elDisabled.disabled = true
-        } else if (behaviour === 'readonly' && elReadOnly) {
-          elReadOnly.readOnly = true
+        } else if (behaviour === 'disable') {
+          el_.disabled = true
+        } else if (behaviour === 'readonly') {
+          el_.readOnly = true
         }
       }
     }
@@ -293,40 +291,6 @@ function getBehaviour(modifiers: any): Behaviour {
     return 'readonly'
   }
   return 'hide'
-}
-
-interface HasDisabledElement extends HTMLElement {
-  disabled: string | boolean
-}
-
-const disabledTypes = [
-  HTMLButtonElement,
-  HTMLFieldSetElement,
-  HTMLInputElement,
-  HTMLOptGroupElement,
-  HTMLOptionElement,
-  HTMLSelectElement,
-  HTMLTextAreaElement,
-]
-
-function supportsDisabled(el: HTMLElement): HasDisabledElement | false {
-  if (disabledTypes.some((type) => el instanceof type)) {
-    return el as HasDisabledElement
-  }
-  return false
-}
-
-interface HasReadOnlyElement extends HTMLElement {
-  readOnly: string | boolean
-}
-
-const readOnlyTypes = [HTMLInputElement, HTMLTextAreaElement]
-
-function supportsReadOnly(el: HTMLElement): HasReadOnlyElement | false {
-  if (readOnlyTypes.some((type) => el instanceof type)) {
-    return el as HasReadOnlyElement
-  }
-  return false
 }
 
 /**
