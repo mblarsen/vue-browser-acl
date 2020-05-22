@@ -2,6 +2,10 @@
 
 ## next
 
+## 0.15.1
+
+- internal changes
+
 ## 0.15.0
 
 - breaking: renamed 'Subject' → 'VerbObject' see [mblarsen/browser-acl's
