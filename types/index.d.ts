@@ -12,19 +12,6 @@ export interface AclWithRouter extends Acl {
 export type Behaviour = 'disable' | 'readonly' | 'hide'
 
 export type Options = {
-  acl?: AclOptions
-  aliases?: string[]
-  assumeGlobal?: boolean
-  caseMode?: boolean
-  debug?: boolean
-  directive?: string
-  failRoute?: string
-  helper?: boolean
-  strict?: boolean
-  router?: VueRouter
-}
-
-export type CompiledOptions = {
   acl: AclOptions
   aliases: string[]
   assumeGlobal: boolean
@@ -86,7 +73,7 @@ export type VueAcl = {
     Vue: VueConstructor,
     user: User | UserGetter,
     aclOrSetupCallback?: Acl | SetupCallback | undefined,
-    options?: Options,
+    options?: Partial<Options>,
   ) => void
 }
 

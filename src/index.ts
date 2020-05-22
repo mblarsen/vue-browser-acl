@@ -7,7 +7,6 @@ import VueRouter, { Route } from 'vue-router/types'
 import {
   AclWithRouter,
   Behaviour,
-  CompiledOptions,
   Options,
   PromiseChain,
   SetupCallback,
@@ -20,7 +19,6 @@ import {
 export {
   AclWithRouter,
   Behaviour,
-  CompiledOptions,
   Options,
   PromiseChain,
   SetupCallback,
@@ -34,7 +32,7 @@ const VueAcl: VueAcl = {
     Vue: VueConstructor,
     user: User | UserGetter,
     aclOrSetupCallback: Acl | SetupCallback | undefined = undefined,
-    options: Options = {},
+    options: Partial<Options> = {},
   ): void {
     const userAccessor: Function =
       typeof user === 'function' ? user : () => user
@@ -42,7 +40,7 @@ const VueAcl: VueAcl = {
     /* defaults */
     const strict = Boolean(options.strict)
 
-    const opt: CompiledOptions = Object.assign(
+    const opt: Options = Object.assign(
       {
         acl: { strict },
         aliases: ['role'],
@@ -365,7 +363,7 @@ function commentNode(el: HTMLElement, vnode: VNode) {
 /**
  * Return the first property from meta that is 'can' or one of its aliases.
  */
-const findCanWithOptions = (opt: CompiledOptions) => (
+const findCanWithOptions = (opt: Options) => (
   meta: VueRouterMeta,
 ): string | Function => {
   return ([opt.directive, ...(opt.aliases || [])] as string[])
@@ -398,7 +396,7 @@ const arrayToGlobalExprTpl = ({ arg, value }: DirectiveBinding) => [
 const stringToExprTpl = (
   { arg, value, modifiers }: DirectiveBinding,
   vnode: VNode,
-  opt: CompiledOptions,
+  opt: Options,
 ) => {
   let [verb, verbObject] = arg ? [arg, value] : value.split(' ')
 
