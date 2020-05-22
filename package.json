@@ -20,6 +20,10 @@
   "main": "dist/index.js",
   "module": "dist/index.module.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
   "scripts": {
     "prebuild": "rm -rf ./dist",
     "build": "microbundle build --tsconfig ./tsconfig.json --name VueBrowserAcl",
