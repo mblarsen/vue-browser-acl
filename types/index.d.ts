@@ -90,8 +90,6 @@ export type VueAcl = {
   ) => void
 }
 
-declare module 'vue-browser-acl' {}
-
 declare module 'vue/types/vue' {
   interface VueConstructor {
     $can: AclHelper
