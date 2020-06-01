@@ -28,6 +28,8 @@ For more background on the "syntax design" read this short article: [Vue user pe
 
 ## Examples
 
+![example](example.png)
+
 Similar to v-if removes button if user does not have permission to transfer
 repo.
 
