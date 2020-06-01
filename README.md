@@ -131,7 +131,7 @@ representation of what the object is.
 In this example it is assumed that you have a property type on your object:
 
 ```javascript
-acl.subjectMapper = (s) => (typeof s === 'string' ? s : s.type)
+acl.verbObjectMapper = (s) => (typeof s === 'string' ? s : s.type)
 ```
 
 E.g. a post:
