@@ -2,6 +2,10 @@
 
 ## next
 
+## 0.15.2
+
+- internal changes: gets rid of explicit references to HTMLElements children
+
 ## 0.15.1
 
 - internal changes
