@@ -26,6 +26,8 @@
 
 For more background on the "syntax design" read this short article: [Vue user permissions through directives](https://blog.cheesefi.com/blog/vue-user-permissions-through-directives/).
 
+[![Contact me on Codementor](https://www.codementor.io/m-badges/mblarsen/im-a-cm-b.svg)](https://www.codementor.io/@mblarsen?refer=badge)
+
 ## Examples
 
 ![example](example.png)
