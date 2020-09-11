@@ -123,6 +123,13 @@ define rules and policies (rules using classes).
 
 As an optional third parameter you can pass an [options](#options) object.
 
+> **Attention**: When using packagers such as _webpack_ or _rollup_ your code is
+optimized in a way that requires you to register your rules in a safer way.
+Make you sure you read through the [verb-object-mapping section](https://github.com/mblarsen/browser-acl#best-practice).
+In short it encourges you to use the [`acl.register` function](https://github.com/mblarsen/browser-acl#register)
+to register your models explictly, so that however the packager mangles your 
+variables the code will still work in production.
+
 ### Plain objects vs function/class
 
 The above describes setup in applications where you use ES6 classes or named
@@ -146,7 +153,7 @@ E.g. a post:
 }
 ```
 
-See the details in browser-acl [verb-object mapper section](https://github.com/mblarsen/browser-acl#subjectmapper).
+See the details in browser-acl [verb-object mapper section](https://github.com/mblarsen/browser-acl#verb-object-mapping).
 
 ## Usage
 
