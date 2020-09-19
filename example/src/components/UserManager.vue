@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <div v-if="authenticated">
       Hi, {{ user.name }} ({{ user.type }})
-      <button @click.prevent="logout">Log out</button>
+      <button @click.prevent="logMeOut">Log out</button>
     </div>
     <div v-else-if="authenticating">
       Wait...
@@ -55,6 +55,11 @@ export default {
   },
   methods: {
     ...mapActions('user', ['logout']),
+    logMeOut() {
+      return this.logout().then(() => {
+        this.username = null
+      })
+    },
     authenticate() {
       if (this.username.trim()) {
         this.$store
