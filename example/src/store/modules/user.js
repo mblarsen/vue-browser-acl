@@ -1,10 +1,4 @@
-import {
-  authUser,
-  createUser,
-  getUser,
-  logout,
-  reauthenticate,
-} from '../../api/Users.js'
+import { authUser, logout, reauthenticate } from '../../api/Users.js'
 
 const state = {
   user: null,
