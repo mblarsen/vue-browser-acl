@@ -36,14 +36,17 @@ class PostPolicy {
     // void lets the other rules decide
   }
   create(user) {
+    log('create rule')
     return user
   }
   edit(user, post) {
+    log('edit rule')
     // Since the beforeAll hook already checked for admin and empty user we
     // don't have to do it here
     return user.name === post.user
   }
   delete(user, post) {
+    log('delete rule')
     return user.name === post.user
   }
 }
