@@ -5,13 +5,15 @@
   },
   "dependencies": {
     "debug": "^4.1.1",
-    "vue": "^2.5.0",
-    "vue-router": "^3.0.0",
-    "vuex": "^3.1.1",
-    "vue-browser-acl": "file:../"
+    "miragejs": "^0.1.40",
+    "vue": "^2.6.12",
+    "vue-browser-acl": "file:../",
+    "vue-router": "^3.4.3",
+    "vue-template-compiler": "^2.6.12",
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
-    "@pwa/cli": "latest",
+    "@pwa/cli": "^0.5.4",
     "@pwa/preset-vue": "latest"
   },
   "browserslist": [

@@ -5,6 +5,9 @@ import Acl from 'vue-browser-acl'
 import store from './store/index.js'
 import Post from './models/Post.js'
 import debug from 'debug'
+import makeServer from './api/server.js'
+
+makeServer()
 
 const log = debug('demo')
 

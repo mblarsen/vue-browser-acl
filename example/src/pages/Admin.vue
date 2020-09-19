@@ -7,8 +7,8 @@
       isn't a replacement for other security meassures.
     </p>
     <div>
-      <button>do admin stuff</button>
-      <button v-can:super.disable>do advacned admin stuff</button>
+      <button @click="dooo">do admin stuff</button>
+      <button v-can:super.disable @click="superDooo">do advacned admin stuff</button>
     </div>
     <p>
       Advanced admin stuff can only be done if you are `super` {{ superText }}
@@ -28,5 +28,13 @@ export default {
         : ` but you are currently ${this.you.name}.`
     },
   },
+  methods: {
+    dooo() {
+      alert('Done')
+    },
+    superDooo() {
+      alert('Super done')
+    }
+  }
 }
 </script>
