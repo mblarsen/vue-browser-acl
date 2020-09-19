@@ -12,7 +12,7 @@ export default class Posts {
   static async find(id) {
     const response = await fetch(`/api/posts/${id}`)
     const data = await response.json()
-    return Post.create(data.posts.pop())
+    return Post.create(data.posts)
   }
   static async create(props) {
     const response = await fetch('/api/posts', {
