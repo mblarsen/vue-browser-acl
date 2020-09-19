@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section v-can:admin>
+    <section v-role:admin>
       <h2>Admin commands</h2>
       <p>
         Here would be some admin commands. Note: `vue-browser-acl` is only a
