@@ -15,9 +15,10 @@ of different groups.
 - Different user types has different permissions (e.g. group or owner of resource)
 - Use of rules vs policies (see [`src/index.js`](src/index.js#L44))
 - Use of `beforeAll` (see [`PostPolicy`](src/index.js#L18))
-- Enable logging `localStorage.debug="demo*"` then refresh
 - Show the use of 'fail' as a function with purpose of implementing redirect
   after login
+
+> Enable logging `localStorage.debug="demo*"` then refresh and watch the console.
 
 # Not in this demo
 
