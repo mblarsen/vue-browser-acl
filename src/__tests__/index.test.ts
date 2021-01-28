@@ -83,17 +83,18 @@ const routes: RouteConfig[] = [
   }
 ]
 
-describe.only('Router integration', () => {
+describe('Router integration', () => {
   test('Strict mode', async () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
+
     const router = new VueRouter({ routes: routes })
     router.push("");
+
     localVue.use(VueAcl, getUser, (acl: Acl) => {
       acl.rule('idle', true)
     }, { router: router, failRoute: '/fallback', strict: true, assumeGlobal: true })
-
-
+    
     const wrapper = mount(
       {
         template: `
