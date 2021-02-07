@@ -147,12 +147,23 @@ const VueAcl: VueAcl = {
         return chain
       }
 
+      const strictChain = Promise.resolve(false) as PromiseChain;
+      strictChain.getFail = () => null;
+
       router.beforeEach((to: Route, from: Route, next: any) => {
+        //prevent infinite loop if the fallback route contains no can meta
+        if(opt.strict && to.path === opt.failRoute) {
+          return next();
+        }
+
         const metas = to.matched
           .filter((route) => route.meta && findCan(route.meta))
           .map((route) => route.meta)
-
-        const chain = chainCans(metas, to, from)
+          
+        // enforce strict mode 
+        const chain = (metas.length === 0 && opt.strict)
+        ? strictChain
+        : chainCans(metas, to, from)
 
         chain.then((result) => {
           if (result === true) {

@@ -58,12 +58,16 @@ describe('Bad setup', () => {
 
 const routes: RouteConfig[] = [
   {
-    path: '*',
+    path: "*",
+    redirect: '/home'
+  },
+  {
+    path: '/home',
     component: {
       render: (c) => c('div', "Normal Route")
     },
     meta: {
-      can: 'idle'
+      can: 'see-home'
     }
   },
   {
@@ -80,19 +84,20 @@ const routes: RouteConfig[] = [
     meta: {
       can: true
     }
+      
   }
 ]
 
 describe('Router integration', () => {
-  test('Strict mode', async () => {
+  test('Strict mode directs to fallback route with no meta', async () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
 
-    const router = new VueRouter({ routes: routes })
+    const router = new VueRouter({ routes: routes, mode: 'hash' })
+    
     router.push("");
-
     localVue.use(VueAcl, getUser, (acl: Acl) => {
-      acl.rule('idle', true)
+      acl.rule('see-home', true)
     }, { router: router, failRoute: '/fallback', strict: true, assumeGlobal: true })
     
     const wrapper = mount(
@@ -102,15 +107,55 @@ describe('Router integration', () => {
       `
       },
       { localVue, router },
-    )
-
-    expect(wrapper.html()).toContain('Normal Route')
-
-    router.push('/nocanroute')
+    )   
 
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.html()).toContain('Fallback Route')
+    expect(wrapper.html()).toContain('Normal Route')
+
+    router.push('/nocanroute').catch((err) => {
+      expect(err).toBe('[Error: Redirected when going from "/home" to "/nocanroute" via a navigation guard.]')
+    })
+
+    await wrapper.vm.$nextTick();
+
+    const html = wrapper.html();
+
+    expect(html).toContain('Fallback Route')
+
+  }),
+  test('Normal mode passes route with no meta', async () => {
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+
+    const router = new VueRouter({ routes: routes, mode: 'hash'})
+    
+    router.push("");
+    localVue.use(VueAcl, getUser, (acl: Acl) => {
+      acl.rule('see-home', true)
+    }, { router: router, failRoute: '/fallback'})
+    
+    const wrapper = mount(
+      {
+        template: `
+        <router-view></router-view>
+      `
+      },
+      { localVue, router },
+    )   
+
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.html()).toContain('Normal Route')
+
+    router.push('/nocanroute');
+
+    await wrapper.vm.$nextTick();
+
+    const html = wrapper.html();
+
+    expect(html).toContain("Shouldn't be here in strict mode")
+
   })
 })
 
