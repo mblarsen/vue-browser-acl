@@ -1,6 +1,6 @@
 import Acl from 'browser-acl'
 import { Verb, VerbObject, Options as AclOptions } from 'browser-acl'
-import { VueConstructor } from 'vue/types'
+import Vue, { VueConstructor } from 'vue/types'
 import VueRouter from 'vue-router/types'
 
 export { Verb, VerbObject, TestFunction } from 'browser-acl'
@@ -78,7 +78,7 @@ export type VueAcl = {
 }
 
 declare module 'vue/types/vue' {
-  interface VueConstructor {
+  interface Vue {
     $can: AclHelper
   }
 }
