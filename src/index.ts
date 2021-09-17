@@ -88,10 +88,8 @@ const VueAcl: VueAcl = {
 
       /* convert 'edit Post' to ['edit', 'Post'] */
       const aclTuple = (value: string): [string, string | null] => {
-        const [
-          verb,
-          verbObject = opt.assumeGlobal ? Acl.GlobalRule : null,
-        ] = value.split(' ')
+        const [verb, verbObject = opt.assumeGlobal ? Acl.GlobalRule : null] =
+          value.split(' ')
         return [verb, verbObject]
       }
 
@@ -327,14 +325,14 @@ function commentNode(el: HTMLElement, vnode: VNode) {
 /**
  * Return the first property from meta that is 'can' or one of its aliases.
  */
-const findCanWithOptions = (opt: Options) => (
-  meta: VueRouterMeta,
-): string | Function => {
-  return ([opt.directive, ...(opt.aliases || [])] as string[])
-    .map((key: string) => meta[key])
-    .filter(Boolean)
-    .shift()
-}
+const findCanWithOptions =
+  (opt: Options) =>
+  (meta: VueRouterMeta): string | Function => {
+    return ([opt.directive, ...(opt.aliases || [])] as string[])
+      .map((key: string) => meta[key])
+      .filter(Boolean)
+      .shift()
+  }
 
 /**
  * Maps binding.value of type array to expression tuple
