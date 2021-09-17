@@ -186,7 +186,7 @@ const VueAcl: VueAcl = {
       let verb, verbArg, verbObject, params
       verbArg = binding.arg
 
-      if (Array.isArray(binding.value) && binding.expression.startsWith('[')) {
+      if (Array.isArray(binding.value) && binding.expression?.startsWith('[')) {
         ;[verb, verbObject, params] = binding.modifiers.global
           ? arrayToGlobalExprTpl(binding)
           : arrayToExprTpl(binding)
