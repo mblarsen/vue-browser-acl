@@ -2,6 +2,10 @@
 
 ## next
 
+## 0.15.3
+
+- types: changed base type from VueConstructor to Vue (#71)
+
 ## 0.15.2
 
 - internal changes: gets rid of explicit references to HTMLElements children
