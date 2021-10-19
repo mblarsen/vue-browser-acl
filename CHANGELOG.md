@@ -2,6 +2,10 @@
 
 ## next
 
+## 0.15.4
+
+- fix: disabled attribute was lost (#63)
+
 ## 0.15.3
 
 - types: changed base type from VueConstructor to Vue (#71)

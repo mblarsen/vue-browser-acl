@@ -224,8 +224,14 @@ const VueAcl: VueAcl = {
       const not = binding.modifiers.not
 
       const el_ = el as LooseHTMLElement
-      el_.disabled = false
-      el_.readOnly = false
+
+      if (!el.hasAttribute('disabled')) {
+        el_.disabled = false
+      }
+
+      if (!el.hasAttribute('readOnly')) {
+        el_.readOnly = false
+      }
 
       if ((ok && not) || (!ok && !not)) {
         if (behaviour === 'hide') {
