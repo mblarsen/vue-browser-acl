@@ -4,7 +4,7 @@
 
 ## 0.15.4
 
-- fix: disabled attribute was lost (#63)
+- fix: change 'disabled' and 'readonly' if not set (#63)
 
 ## 0.15.3
 
