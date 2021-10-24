@@ -2,6 +2,10 @@
 
 ## next
 
+## 0.15.4
+
+- fix: change 'disabled' and 'readonly' if not set (#63)
+
 ## 0.15.3
 
 - types: changed base type from VueConstructor to Vue (#71)
