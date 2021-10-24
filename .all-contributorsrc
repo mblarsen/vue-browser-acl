@@ -45,6 +45,16 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "thomaslichtdotnet",
+      "name": "thomaslichtdotnet",
+      "avatar_url": "https://avatars.githubusercontent.com/u/55015228?v=4",
+      "profile": "https://github.com/thomaslichtdotnet",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
