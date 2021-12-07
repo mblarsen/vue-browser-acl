@@ -34,7 +34,7 @@
     "postversion": "git push && git push --tags"
   },
   "dependencies": {
-    "browser-acl": "^0.9.1"
+    "browser-acl": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
