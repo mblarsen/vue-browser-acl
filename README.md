@@ -1,3 +1,11 @@
+# :warning: Maintainer Wanted :warning:
+
+Due lack of time I've decided to not actively maintain this repo any more. I will apply any security related PRs from bots and the community. The package has been stable for quite a long while. There is the odd bug or edge case, but they are far apart and other than that It Just Works:tm:.
+
+I still care to see this package live on, so should any individual, company, or open-source organziation want to take over the project please contact me.
+
+_**I started working on the Vue 3 version. Some of the functionality will have to go due to changes in the plugin API. If any one would like to work with me on this PR I'll also put in the time.**_
+
 # vue-browser-acl 🔒
 
 [![Build status](http://img.shields.io/travis/mblarsen/browser-acl.svg)](http://travis-ci.org/mblarsen/vue-browser-acl)
