@@ -3,6 +3,7 @@ import { User } from '../../types'
 import Acl from 'browser-acl'
 import { Verb } from '../../types'
 import VueAcl from '../index'
+import VueRouter, { RouteConfig } from 'vue-router'
 
 let _user: User | null
 
@@ -26,7 +27,7 @@ describe('Bad setup', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error')
     // @ts-ignore
-    console.error.mockImplementation(() => {})
+    console.error.mockImplementation(() => { })
   })
 
   afterEach(() => {
@@ -51,6 +52,110 @@ describe('Bad setup', () => {
     }
     expect(init).toThrow("Cannot read property 'id' of null")
     // expect(wrapper.html()).toContain('delete')
+  })
+})
+
+
+const routes: RouteConfig[] = [
+  {
+    path: "*",
+    redirect: '/home'
+  },
+  {
+    path: '/home',
+    component: {
+      render: (c) => c('div', "Normal Route")
+    },
+    meta: {
+      can: 'see-home'
+    }
+  },
+  {
+    path: '/nocanroute',
+    component: {
+      render: (c) => c('div', "Shouldn't be here in strict mode")
+    }
+  },
+  {
+    path: '/fallback',
+    component: {
+      render: (c) => c('div', "Fallback Route")
+    },
+    meta: {
+      can: true
+    }
+      
+  }
+]
+
+describe('Router integration', () => {
+  test('Strict mode directs to fallback route with no meta', async () => {
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+
+    const router = new VueRouter({ routes: routes, mode: 'hash' })
+    
+    router.push("");
+    localVue.use(VueAcl, getUser, (acl: Acl) => {
+      acl.rule('see-home', true)
+    }, { router: router, failRoute: '/fallback', strict: true, assumeGlobal: true })
+    
+    const wrapper = mount(
+      {
+        template: `
+        <router-view></router-view>
+      `
+      },
+      { localVue, router },
+    )   
+
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.html()).toContain('Normal Route')
+
+    router.push('/nocanroute').catch((err) => {
+      expect(err).toBe('[Error: Redirected when going from "/home" to "/nocanroute" via a navigation guard.]')
+    })
+
+    await wrapper.vm.$nextTick();
+
+    const html = wrapper.html();
+
+    expect(html).toContain('Fallback Route')
+
+  }),
+  test('Normal mode passes route with no meta', async () => {
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+
+    const router = new VueRouter({ routes: routes, mode: 'hash'})
+    
+    router.push("");
+    localVue.use(VueAcl, getUser, (acl: Acl) => {
+      acl.rule('see-home', true)
+    }, { router: router, failRoute: '/fallback'})
+    
+    const wrapper = mount(
+      {
+        template: `
+        <router-view></router-view>
+      `
+      },
+      { localVue, router },
+    )   
+
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.html()).toContain('Normal Route')
+
+    router.push('/nocanroute');
+
+    await wrapper.vm.$nextTick();
+
+    const html = wrapper.html();
+
+    expect(html).toContain("Shouldn't be here in strict mode")
+
   })
 })
 

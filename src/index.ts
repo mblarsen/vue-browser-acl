@@ -146,10 +146,20 @@ const VueAcl: VueAcl = {
       }
 
       router.beforeEach((to: Route, from: Route, next: any) => {
+        //prevent infinite loop if the fallback route contains no can meta
+        if(opt.strict && to.path === opt.failRoute) {
+          return next();
+        }
+
         const metas = to.matched
           .filter((route) => route.meta && findCan(route.meta))
           .map((route) => route.meta)
-
+          
+        // enforce strict mode 
+        if(metas.length === 0 && opt.strict) {
+          next(opt.failRoute)
+        }
+       
         const chain = chainCans(metas, to, from)
 
         chain.then((result) => {
