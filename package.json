@@ -2,7 +2,7 @@
   "name": "vue-browser-acl",
   "description": "Easy ACL in Vue build on top of the browser-acl package.",
   "author": "Michael Bøcker-Larsen <m19n@pm.me>",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "keywords": [
     "vue",
     "plugin",
@@ -28,27 +28,20 @@
     "prebuild": "rm -rf ./dist",
     "build": "microbundle build --tsconfig ./tsconfig.json --name VueBrowserAcl",
     "build:watch": "microbundle watch --tsconfig ./tsconfig.json --name VueBrowserAcl",
-    "test": "jest --config jest.config.json",
-    "test:watch": "jest --config jest.config.json --watchAll",
     "version": "npm run build && git add -A ./dist",
     "postversion": "git push && git push --tags"
   },
   "dependencies": {
-    "browser-acl": "^1.0.0"
+    "browser-acl": "^1.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
-    "@nuxt/types": "^0.7.6",
-    "@types/jest": "^25.2.3",
-    "@vue/test-utils": "^1.0.3",
-    "babel-jest": "^26.0.1",
-    "jest": "^26.0.1",
-    "microbundle": "^0.12.0",
-    "ts-jest": "^26.0.0",
-    "typescript": "^3.9.3",
-    "vue": "^2.6.11",
-    "vue-router": "^3.2.0",
+    "@babel/core": "^7.18.6",
+    "@babel/preset-env": "^7.18.6",
+    "@nuxt/types": "^2.15.8",
+    "microbundle": "^0.15.0",
+    "typescript": "^4.7.4",
+    "vue": "^3.2.37",
+    "vue-router": "^4.0.16",
     "vue-template-compiler": "^2.6.11"
   },
   "prettier": {

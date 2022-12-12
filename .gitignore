@@ -6,3 +6,4 @@ yarn-error.log*
 tags
 dist/docs.md
 package-lock.json
+dist/
